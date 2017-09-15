@@ -1,2 +1,2 @@
 # OpenDiscon
-Open source implementation of the legacy GH Bladed wind turbine controller interface.
+OPEN source implementation of the legacy GHBladed external controller interface.
