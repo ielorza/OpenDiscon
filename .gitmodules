@@ -1,0 +1,3 @@
+[submodule "OpenWitcon"]
+	path = OpenWitcon
+	url = https://github.com/ielorza/OpenWitcon.git
