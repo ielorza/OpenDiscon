@@ -17,13 +17,6 @@ You should have received a copy of the GNU General Public License
 along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* 
- * File:   ikClwindconWTCon.h
- * Author: ielorza
- *
- * Created on 19 de junio de 2017, 15:37
- */
-
 /**
  * @file ikClwindconWTCon.h
  * 
