@@ -21,6 +21,7 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 #include "ikClwindconWTConfig.h"
 #include "OpenDiscon_EXPORT.h"
+#include "ikEcnDerating.h"
 #include <stdio.h>
 
 void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const char *OUTNAME, char *MESSAGE) {
