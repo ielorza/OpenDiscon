@@ -238,29 +238,21 @@ void ikTunePitchPI(ikConLoopParams *params, double T) {
                       z - 1
 	rad/s --> deg
 	*/
-	params->linearController.demandTfs.tfParams[0].enable = 1;
-    params->linearController.demandTfs.tfParams[0].b[0] = (Kp + Ki*T/2);
-    params->linearController.demandTfs.tfParams[0].b[1] = -(Kp - Ki*T/2);
-    params->linearController.demandTfs.tfParams[0].b[2] = 0.0;
-    params->linearController.demandTfs.tfParams[0].a[0] = 1.0;
-    params->linearController.demandTfs.tfParams[0].a[1] = 0.0;
-    params->linearController.demandTfs.tfParams[0].a[2] = 0.0;
-
-	params->linearController.measurementTfs.tfParams[0].enable = 1;
-    params->linearController.measurementTfs.tfParams[0].b[0] = (Kp + Ki*T/2);
-    params->linearController.measurementTfs.tfParams[0].b[1] = -(Kp - Ki*T/2);
-    params->linearController.measurementTfs.tfParams[0].b[2] = 0.0;
-    params->linearController.measurementTfs.tfParams[0].a[0] = 1.0;
-    params->linearController.measurementTfs.tfParams[0].a[1] = 0.0;
-    params->linearController.measurementTfs.tfParams[0].a[2] = 0.0;
-
 	params->linearController.errorTfs.tfParams[0].enable = 1;
-    params->linearController.errorTfs.tfParams[0].b[0] = 1.0;
-    params->linearController.errorTfs.tfParams[0].b[1] = 0.0;
+    params->linearController.errorTfs.tfParams[0].b[0] = (Kp + Ki*T/2);
+    params->linearController.errorTfs.tfParams[0].b[1] = -(Kp - Ki*T/2);
     params->linearController.errorTfs.tfParams[0].b[2] = 0.0;
     params->linearController.errorTfs.tfParams[0].a[0] = 1.0;
-    params->linearController.errorTfs.tfParams[0].a[1] = -1.0;
+    params->linearController.errorTfs.tfParams[0].a[1] = 0.0;
     params->linearController.errorTfs.tfParams[0].a[2] = 0.0;
+
+	params->linearController.postGainTfs.tfParams[0].enable = 1;
+    params->linearController.postGainTfs.tfParams[0].b[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].b[1] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].b[2] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].a[1] = -1.0;
+    params->linearController.postGainTfs.tfParams[0].a[2] = 0.0;
 
 }
 
@@ -372,7 +364,15 @@ void ikTuneTorquePI(ikConLoopParams *params, double T) {
     params->linearController.errorTfs.tfParams[0].b[1] = -(Kp - Ki*T/2);
     params->linearController.errorTfs.tfParams[0].b[2] = 0.0;
     params->linearController.errorTfs.tfParams[0].a[0] = 1.0;
-    params->linearController.errorTfs.tfParams[0].a[1] = -1.0;
+    params->linearController.errorTfs.tfParams[0].a[1] = 0.0;
     params->linearController.errorTfs.tfParams[0].a[2] = 0.0;
+
+	params->linearController.postGainTfs.tfParams[0].enable = 1;
+    params->linearController.postGainTfs.tfParams[0].b[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].b[1] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].b[2] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].a[1] = -1.0;
+    params->linearController.postGainTfs.tfParams[0].a[2] = 0.0;
 
 }
