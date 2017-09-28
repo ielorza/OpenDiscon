@@ -37,7 +37,7 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	/* Torque and collective pitch */
 	static ikClwindconWTCon con;
 	/* Derating */
-	const double deratingRatio = 0.2; /* later to be got via the supercontroller interface */
+	const double deratingRatio = 0.0; /* later to be got via the supercontroller interface */
 	/* IPC */
 	int K;
 	double rootMOOP[3];
