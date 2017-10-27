@@ -42,6 +42,7 @@ void setParams(ikClwindconWTConParams *param) {
 
 void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
 
+	/*! [CL-Windcon drivetrain damper] */
     /*
 	####################################################################
                      Drivetrain damper
@@ -54,12 +55,13 @@ void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
 
     Set parameters here:
 	*/
-    double G = -0.0382; /* [kNm s^2/rad] 4 Nm s/rpm */
+    double G = 0.0382; /* [kNm s^2/rad] 4 Nm s/rpm */
     double d = 0.1; /* [-] */
     double w = 21.1; /* [rad/s] */
     /*
     ####################################################################
 	*/
+	/*! [CL-Windcon drivetrain damper] */
 
 
     /*
@@ -77,17 +79,21 @@ void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
     params->linearController.errorTfs.tfParams[0].a[1] = -2.0*(1.0 - T*T*w*w/4.0);
     params->linearController.errorTfs.tfParams[0].a[2] = (1.0 - T*d*w + T*T*w*w/4.0);
     params->linearController.errorTfs.tfParams[1].enable = 1;
-    params->linearController.errorTfs.tfParams[1].b[0] = G*T/2.0*w*w;
+    params->linearController.errorTfs.tfParams[1].b[0] = -G*T/2.0*w*w;
 
 }
 
 void ikTuneOptimumTorqueCurve(ikConLoopParams *params) {
     int i;
+	double Kopt;
 
+	/*! [Optimum torque] */
     /*
 	implement variable speed at low wind speeds via an optimum torque look-up table.
-    Kopt = 97.0819e-3 kNms^2/rad^2
 	*/
+    Kopt = 97.0819e-3; /* kNms^2/rad^2 */
+	/*! [Optimum torque] */
+	
     params->setpointGenerator.nzones = 1;
     params->setpointGenerator.setpoints[0][0] = 31.4159; /* [rad/s] 300 rpm */
     params->setpointGenerator.setpoints[1][0] = 314.1593; /* [rad/s] 3000 rpm (this is to keep the actual setpoint always at 300 rpm) */
@@ -95,13 +101,14 @@ void ikTuneOptimumTorqueCurve(ikConLoopParams *params) {
     for (i = 0; i < params->setpointGenerator.preferredControlActionLutblN; i++) {
         double speed = 3.141592653589793 / 30.0 * (300.0 + 10.0 * i);
         params->setpointGenerator.preferredControlActionLutblX[i] = speed;
-        params->setpointGenerator.preferredControlActionLutblY[i] = 97.0819e-3 * speed * speed;
+        params->setpointGenerator.preferredControlActionLutblY[i] = Kopt * speed * speed;
     }
 
 }
 
 void ikTunePitchPIGainSchedule(ikConLoopParams *params) {
 
+	/*! [Gain schedule] */
     /*
 	####################################################################
                      Pitch Gain Schedule
@@ -132,12 +139,13 @@ void ikTunePitchPIGainSchedule(ikConLoopParams *params) {
     params->linearController.gainSchedY[7] = 1.1909;
     params->linearController.gainSchedY[8] = 1.1182;
     params->linearController.gainSchedY[9] = 1.0545;
-
+	/*! [Gain schedule] */
+	
 }
 
 void ikTunePitchLowpassFilter(ikConLoopParams *params, double T) {
 
-
+	/*! [Pitch lowpass filter] */
     /*
 	####################################################################
                      Speed feedback low pass filter
@@ -154,6 +162,7 @@ void ikTunePitchLowpassFilter(ikConLoopParams *params, double T) {
     /*
     ####################################################################
 	*/
+	/*! [Pitch lowpass filter] */
 
     /*
 	tune the pitch control feedback filter to this tf (twice, mind you):
@@ -184,6 +193,7 @@ void ikTunePitchLowpassFilter(ikConLoopParams *params, double T) {
 
 void ikTunePitchNotches(ikConLoopParams *params, double T) {
 
+	/*! [1st fore-aft tower mode filter] */
     /*
 	####################################################################
                      1st fore-aft tower mode filter
@@ -201,6 +211,7 @@ void ikTunePitchNotches(ikConLoopParams *params, double T) {
     /*
     ####################################################################
 	*/
+	/*! [1st fore-aft tower mode filter] */
 
     params->linearController.measurementNotches.dT = T;
     params->linearController.measurementNotches.notchParams[0].enable = 1;
@@ -212,6 +223,7 @@ void ikTunePitchNotches(ikConLoopParams *params, double T) {
 
 void ikTunePitchPI(ikConLoopParams *params, double T) {
 
+	/*! [Pitch PI] */
     /*
 	####################################################################
                      Pitch PI
@@ -229,6 +241,7 @@ void ikTunePitchPI(ikConLoopParams *params, double T) {
     /*
     ####################################################################
 	*/
+	/*! [Pitch PI] */
 
 
 	/*
@@ -258,7 +271,7 @@ void ikTunePitchPI(ikConLoopParams *params, double T) {
 
 void ikTuneTorqueLowpassFilter(ikConLoopParams *params, double T) {
 
-
+	/*! [Torque lowpass filter] */
     /*
 	####################################################################
                     Speed feedback low pass filter
@@ -275,6 +288,7 @@ void ikTuneTorqueLowpassFilter(ikConLoopParams *params, double T) {
     /*
     ####################################################################
 	*/
+	/*! [Torque lowpass filter] */
 
     /*
 	tune the torque control feedback filter to this tf (twice, mind you):
@@ -305,6 +319,7 @@ void ikTuneTorqueLowpassFilter(ikConLoopParams *params, double T) {
 
 void ikTuneTorqueNotches(ikConLoopParams *params, double T) {
 
+	/*! [1st side-side tower mode filter] */
     /*
 	####################################################################
                     1st side-side tower mode filter
@@ -322,6 +337,7 @@ void ikTuneTorqueNotches(ikConLoopParams *params, double T) {
     /*
     ####################################################################
 	*/
+	/*! [1st side-side tower mode filter] */
 
     params->linearController.measurementNotches.dT = T;
     params->linearController.measurementNotches.notchParams[0].enable = 1;
@@ -333,6 +349,7 @@ void ikTuneTorqueNotches(ikConLoopParams *params, double T) {
 
 void ikTuneTorquePI(ikConLoopParams *params, double T) {
 
+	/*! [Torque PI] */
     /*
 	####################################################################
                     Torque PI
@@ -350,6 +367,7 @@ void ikTuneTorquePI(ikConLoopParams *params, double T) {
     /*
     ####################################################################
 	*/
+	/*! [Torque PI] */
 
 
 	/*

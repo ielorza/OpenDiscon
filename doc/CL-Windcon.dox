@@ -1,0 +1,125 @@
+/*
+Copyright (C) 2017 IK4-IKERLAN
+
+This file is part of OpenDiscon.
+ 
+OpenDiscon is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+ 
+OpenDiscon is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/** @page clwindcon CL-Windcon
+*
+* <table style="border:none;">
+* <tr><td>
+* \htmlonly <style>div.image img[src="eu_emblem.jpg"]{width:100px;}</style> \endhtmlonly 
+* @image html eu_emblem.jpg
+* </td>
+* <td>
+* This project has received funding from the European Union’s Horizon 2020 research and
+* innovation programme under grant agreement No 727477
+* </td>
+* </tr>
+* </table>
+*
+* OpenDiscon caters to the needs of H2020 project CL-Windcon, by providing a controller specifically
+* tuned for compatibility with the Innwind 10 MW reference wind turbine model.
+*
+* @section basic Basic controller
+*
+* The basic controller provided by OpenDiscon for CL-Windcon is an instance of @link ikClwindconWTCon @endlink,
+* with the control loop parameters given by @link ikClwindconWTConfig.c @endlink.
+*
+* @subsection dtdamper Drivetrain damper
+*
+* The drivetrain damper is an implementation of the following transfer function from [1]:
+* @f[
+*  D(s) = \frac{G s \omega^2}{s^2 + 2 \xi \omega s + \omega^2}
+* @f]
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c CL-Windcon drivetrain damper
+*
+* @subsection torquecon Torque control
+*
+* @subsubsection torquepi PI
+*
+* The torque controller is a PI, with its parameters given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Torque PI
+* Note the negative gains, which are necessary to make the torque increase when the speed error (setpoint minus measurement) is negative, and viceversa.
+*
+* @subsubsection torquelowpass Low pass filter
+*
+* The speed feedback is low-pass filtered \a twice with a second order filter with the following transfer function:
+* @f[
+*  H(s) = \frac{\omega^2}{s^2 + 2 \xi \omega s + \omega^2}
+* @f]
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Torque lowpass filter
+*
+* @subsubsection torquenotch Notch filter
+*
+* The 1<sup>st</sup> side-side tower mode is filtered out of the speed feedback with a notch filter with the following transfer function:
+* @f[
+*  H(s) = \frac{s^2 + 2 \xi_\mathrm{n} \omega s + \omega^2}{s^2 + 2 \xi_\mathrm{d} \omega s + \omega^2}
+* @f]
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c 1st side-side tower mode filter
+*
+* @subsubsection kopt Optimum torque curve
+*
+* Below rated wind speed, the torque controller uses a quadratic speed-torque curve, along the lines of that described by [1].
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Optimum torque
+*
+* @subsection pitchcon Pitch control
+*
+* @subsubsection pitchpi PI
+*
+* The pitch controller is a PI, with its parameters given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Pitch PI
+* Note the negative gains, which are necessary to make the pitch angle increase when the speed error (setpoint minus measurement) is negative, and viceversa.
+*
+* @subsubsection pitchlowpass Low pass filter
+*
+* The speed feedback is low-pass filtered \a twice with a second order filter with the following transfer function:
+* @f[
+*  H(s) = \frac{\omega^2}{s^2 + 2 \xi \omega s + \omega^2}
+* @f]
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Pitch lowpass filter
+*
+* @subsubsection pitchnotch Notch filter
+*
+* The 1<sup>st</sup> fore-aft tower mode is filtered out of the speed feedback with a notch filter with the following transfer function:
+* @f[
+*  H(s) = \frac{s^2 + 2 \xi_\mathrm{n} \omega s + \omega^2}{s^2 + 2 \xi_\mathrm{d} \omega s + \omega^2}
+* @f]
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c 1st fore-aft tower mode filter
+*
+* @subsubsection gainschedule Gain schedule
+*
+* The pitch PI gains vary according to a gain-schedule, implemented as a pitch-gain look-up table.
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Gain schedule
+*
+* @section references References
+*
+* [1] Tony Burton, Nick Jenkins, David Sharpe, Ervin Bossanyi, <em> Wind Energy Handbook </em>, ISBN: 978-0-470-69975-1.
+*
+*/

@@ -1,0 +1,63 @@
+/*
+Copyright (C) 2017 IK4-IKERLAN
+
+This file is part of OpenDiscon.
+ 
+OpenDiscon is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+ 
+OpenDiscon is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/** @mainpage
+*
+* OpenDiscon is Ikerlan's open source implementation of the legacy GHBladed DISCON interface,
+* which is also used by other wind turbine simulation software packages such as FAST.
+* It is based on Ikerlan's open source wind turbine control software library @ref openwitcon.
+*
+* OpenDiscon is publicly available under a rather permissive @subpage license "license", so
+* it may be used in many ways, possibly some of which have not been imagined by the authors.
+* However, it provides out-of-the-box implementations for the following uses:
+* - @ref clwindcon
+*
+* Using OpenDiscon's out-of-the-box implementations starts with their compilation and linking.
+* CMake files are provided for easy production of the project or makefiles suitable for the
+* user's toolchain. Simply run <a href="https://cmake.org/">CMake</a> on the OpenDiscon directory.
+*
+*/
+
+/** @page license License
+* 
+* Copyright (C) 2017 IK4-IKERLAN
+* 
+* OpenDiscon is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* OpenDiscon is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/** @page openwitcon OpenWitcon
+*
+* OpenWitcon is Ikerlan's open source wind turbine controller software library. It is publicly available
+* <a href="https://github.com/ielorza/OpenWitcon">here</a>.
+*
+* OpenDiscon makes heavy use of OpenWitcon, and the OpenDiscon repository has the OpenWitcon repository
+* as a submodule.
+*
+*/
