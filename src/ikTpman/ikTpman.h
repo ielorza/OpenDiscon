@@ -17,13 +17,6 @@ You should have received a copy of the GNU General Public License
 along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* 
- * File:   ikTpman.h
- * Author: ielorza
- *
- * Created on 16 de febrero de 2017, 10:43
- */
-
 /**
  * @file ikTpman.h
  * 
