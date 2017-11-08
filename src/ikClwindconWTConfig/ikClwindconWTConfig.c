@@ -29,7 +29,7 @@ void setParams(ikClwindconWTConParams *param) {
 	double T = 0.01;
 
 	ikTuneDrivetrainDamper(&(param->drivetrainDamper), T);
-	ikTuneOptimumTorqueCurve(&(param->torqueControl));
+	ikTuneOptimumTorqueCurve(param);
 	ikTunePitchPIGainSchedule(&(param->collectivePitchControl));
 	ikTunePitchLowpassFilter(&(param->collectivePitchControl), T);
 	ikTunePitchNotches(&(param->collectivePitchControl), T);
@@ -83,26 +83,31 @@ void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
 
 }
 
-void ikTuneOptimumTorqueCurve(ikConLoopParams *params) {
-    int i;
-	double Kopt;
+void ikTuneOptimumTorqueCurve(ikClwindconWTConParams *params) {
+
+    params->torqueControl.setpointGenerator.nzones = 1;
+    params->torqueControl.setpointGenerator.setpoints[0][0] = 31.4159265358979; /* [rad/s] 300 rpm */
+    params->torqueControl.setpointGenerator.setpoints[1][0] = 50.2654824574367; /* [rad/s] 480 rpm */
+	params->preferredTorqueFcn = &ikGetPreferredTorque;
+
+}
+
+double ikGetPreferredTorque(double generatorSpeed) {
+	double Qpref;
 
 	/*! [Optimum torque] */
     /*
-	implement variable speed at low wind speeds via an optimum torque look-up table.
+	Implement a quadratic speed-torque relationship.
 	*/
-    Kopt = 97.0819e-3; /* kNms^2/rad^2 */
+    double Kopt = 97.0819e-3; /* kNms^2/rad^2 */
+	double Qmax = 198.943678864869; /* kNm */
+	double Qmin = 95.8159947506117; /* kNm */
 	/*! [Optimum torque] */
-	
-    params->setpointGenerator.nzones = 1;
-    params->setpointGenerator.setpoints[0][0] = 31.4159; /* [rad/s] 300 rpm */
-    params->setpointGenerator.setpoints[1][0] = 314.1593; /* [rad/s] 3000 rpm (this is to keep the actual setpoint always at 300 rpm) */
-    params->setpointGenerator.preferredControlActionLutblN = 71;
-    for (i = 0; i < params->setpointGenerator.preferredControlActionLutblN; i++) {
-        double speed = 3.141592653589793 / 30.0 * (300.0 + 10.0 * i);
-        params->setpointGenerator.preferredControlActionLutblX[i] = speed;
-        params->setpointGenerator.preferredControlActionLutblY[i] = Kopt * speed * speed;
-    }
+
+	Qpref = Kopt * generatorSpeed * generatorSpeed;
+	Qpref = Qpref < Qmax ? Qpref : Qmax;
+	Qpref = Qpref > Qmin ? Qpref : Qmin;
+	return Qpref;
 
 }
 

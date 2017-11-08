@@ -17,13 +17,6 @@ You should have received a copy of the GNU General Public License
 along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* 
- * File:   ikClwindconWTCon.c
- * Author: ielorza
- *
- * Created on 19 de junio de 2017, 15:49
- */
-
 /**
  * @file ikClwindconWTCon.c
  * 
@@ -37,9 +30,15 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 int ikClwindconWTCon_init(ikClwindconWTCon *self, const ikClwindconWTConParams *params) {
     int err;
 	ikClwindconWTConParams params_ = *params;
-	
+
 	/* pass reference to collective pitch demand for use in gain scheduling */
 	params_.collectivePitchControl.linearController.gainShedXVal = &(self->priv.collectivePitchDemand);
+
+	/* pass reference to preferred torque for use in torque control */
+	params_.torqueControl.setpointGenerator.preferredControlAction = &(self->priv.preferredTorque);
+
+	/* register preferred torque function */
+	self->priv.preferredTorqueFcn = params->preferredTorqueFcn;
 
     /* pass on the member parameters */
     err = ikConLoop_init(&(self->priv.dtdamper), &(params_.drivetrainDamper));
@@ -64,6 +63,9 @@ void ikClwindconWTCon_initParams(ikClwindconWTConParams *params) {
     ikConLoop_initParams(&(params->drivetrainDamper));
     ikConLoop_initParams(&(params->torqueControl));
     ikTpman_initParams(&(params->torquePitchManager));
+
+	/* disable preferred torque */
+	params->preferredTorqueFcn = NULL;
 }
 
 int ikClwindconWTCon_step(ikClwindconWTCon *self) {
@@ -76,6 +78,9 @@ int ikClwindconWTCon_step(ikClwindconWTCon *self) {
 
     /* run drivetrain damper */
     self->priv.torqueFromDtdamper = ikConLoop_step(&(self->priv.dtdamper), 0.0, self->in.generatorSpeed, -(self->in.externalMaximumTorque), self->in.externalMaximumTorque);
+
+	/* calculate preferred torque */
+	if (NULL != self->priv.preferredTorqueFcn) self->priv.preferredTorque = (*(self->priv.preferredTorqueFcn))(self->in.generatorSpeed);
 
     /* run torque control */
     self->priv.torqueFromTorqueCon = ikConLoop_step(&(self->priv.torquecon), self->in.maximumSpeed, self->in.generatorSpeed, self->priv.minTorque, self->in.externalMaximumTorque);

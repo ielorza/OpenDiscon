@@ -79,6 +79,8 @@ extern "C" {
         double torqueFromDtdamper;
         double torqueFromTorqueCon;
         double collectivePitchDemand;
+		double (*preferredTorqueFcn)(double);
+		double preferredTorque;
     } ikClwindconWTConPrivate;
     /* @endcond */
 
@@ -138,6 +140,7 @@ extern "C" {
         ikConLoopParams torqueControl; /**<torque control initialisation parameters*/
         ikConLoopParams collectivePitchControl; /**<collective pitch control initialisation parameters*/
         ikTpmanParams torquePitchManager; /**<torque-pitch manager inintialisation parameters*/
+		double (*preferredTorqueFcn)(double); /**<pointer to function which, given the generator speed in rad/s, returns the preferred torque in kNm*/
     } ikClwindconWTConParams;
 
     /**
