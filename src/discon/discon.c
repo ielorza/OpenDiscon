@@ -21,7 +21,6 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 #include "ikClwindconWTConfig.h"
 #include "OpenDiscon_EXPORT.h"
-#include "ikEcnDerating.h"
 #include <stdio.h>
 
 void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const char *OUTNAME, char *MESSAGE) {
@@ -38,11 +37,12 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 		ikClwindconWTCon_init(&con, &param);
 		f = fopen("log.bin", "wb");
 	}
-
-	con.in.externalMaximumTorque = ikEcnDerateTorque(deratingRatio, (double) DATA[19], 10e6, 0.94, 480.0/30*3.1416)/1e3; /* kNm */
-	con.in.externalMinimumTorque = 0.0; /* 0.0 */
+//TODO lower maximum torque according to maximum power with derating (it may be time to bring the power manager back)
+	con.in.deratingRatio = deratingRatio;
+	con.in.externalMaximumTorque = 230.0; /* kNm */
+	con.in.externalMinimumTorque = 0.0; /* kNm */
 	con.in.externalMaximumPitch = 90.0; /* deg */
-	con.in.externalMinimumPitch = ikEcnDeratePitch(deratingRatio)/3.1416*180.0; /* deg */
+	con.in.externalMinimumPitch = 0.0; /* deg */
 	con.in.generatorSpeed = (double) DATA[19]; /* rad/s */
 	con.in.maximumSpeed = 480.0/30*3.1416; /* rpm to rad/s */
 	
@@ -54,6 +54,6 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	DATA[43] = (float) (con.out.pitchDemandBlade3/180.0*3.1416); /* deg to rad */
 	DATA[44] = (float) (con.out.pitchDemandBlade1/180.0*3.1416); /* deg to rad (collective pitch angle) */
 
-	err = ikClwindconWTCon_getOutput(&con, &output, "collective pitch control>linear controller>error transfer functions>0");
+	err = ikClwindconWTCon_getOutput(&con, &output, "maximum torque");
 	fwrite(&(output), 1, sizeof(output), f);
 }	

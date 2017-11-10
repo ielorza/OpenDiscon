@@ -29,7 +29,10 @@ void setParams(ikClwindconWTConParams *param) {
 	double T = 0.01;
 
 	ikTuneDrivetrainDamper(&(param->drivetrainDamper), T);
-	ikTuneOptimumTorqueCurve(param);
+	ikTuneSpeedRange(&(param->torqueControl));
+	ikTunePowerSettings(&(param->powerManager));
+	ikTuneDeratingTorqueStrategy(&(param->powerManager));
+	ikTuneDeratingPitchStrategy(&(param->powerManager));
 	ikTunePitchPIGainSchedule(&(param->collectivePitchControl));
 	ikTunePitchLowpassFilter(&(param->collectivePitchControl), T);
 	ikTunePitchNotches(&(param->collectivePitchControl), T);
@@ -83,69 +86,132 @@ void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
 
 }
 
-void ikTuneOptimumTorqueCurve(ikClwindconWTConParams *params) {
+void ikTuneSpeedRange(ikConLoopParams *params) {
 
-    params->torqueControl.setpointGenerator.nzones = 1;
-    params->torqueControl.setpointGenerator.setpoints[0][0] = 31.4159265358979; /* [rad/s] 300 rpm */
-    params->torqueControl.setpointGenerator.setpoints[1][0] = 50.2654824574367; /* [rad/s] 480 rpm */
-	params->preferredTorqueFcn = &ikGetPreferredTorque;
+	/*
+	####################################################################
+					 Variable generator speed range
+					 
+	Set parameters here:
+	*/
+	const double Wmin = 31.4159265358979; /* [rad/s] 300 rpm */
+	const double Wmax = 50.2654824574367; /* [rad/s] 480 rpm */
+	/*
+	####################################################################
+	*/
+
+    params->setpointGenerator.nzones = 1;
+    params->setpointGenerator.setpoints[0][0] = Wmin;
+    params->setpointGenerator.setpoints[1][0] = Wmax;
 
 }
+	
+void ikTunePowerSettings(ikPowmanParams *params) {
+	
+	/*
+	####################################################################
+					 Power settings
+					 
+	Set parameters here:
+	*/
+	const double Pn = 10.0e3; /* kW */
+	const double eff = 0.94; /* - */
+	/*
+	####################################################################
+	*/
 
-double ikGetPreferredTorque(double generatorSpeed) {
-	double Qpref;
+	params->ratedPower = Pn;
+	params->efficiency = eff;
+}
 
+void ikTuneDeratingTorqueStrategy(ikPowmanParams *params) {
+/*
+This is an original implementation of derating strategy 3a as described by ECN in deliverable D2.1 of H2020 project CL-Windcon.
+The values for the literals have been kindly provided by ECN, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
+*/
+
+	int i;
+	
 	/*! [Optimum torque] */
     /*
-	Implement a quadratic speed-torque relationship.
+	####################################################################
+					 Below rated speed-torque curve
+
+	Curve:
+
+	Q = Kopt(dr) * w^2
+
+	Set parameters here:
 	*/
-    double Kopt = 97.0819e-3; /* kNms^2/rad^2 */
-	double Qmax = 198.943678864869; /* kNm */
-	double Qmin = 95.8159947506117; /* kNm */
+	const int n = 11; /* number of points in the lookup table */
+	const double dr[] = {0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}; /* - */
+	const double Kopt[] = {90.607511506848581, 86.115902720799966, 81.575353112422349, 77.050958297021111, 72.492888078483688, 68.064126426095299, 63.512773230238686, 58.970705560510474, 54.464434076487962, 49.891764181889293, 45.401884663773203}; /* Nm*s^2/rad^2 */
+	/*
+	####################################################################
+	*/
 	/*! [Optimum torque] */
 
-	Qpref = Kopt * generatorSpeed * generatorSpeed;
-	Qpref = Qpref < Qmax ? Qpref : Qmax;
-	Qpref = Qpref > Qmin ? Qpref : Qmin;
-	return Qpref;
+	params->belowRatedTorqueGainTableN = n;
+	for (i = 0; i < n; i++) {
+		params->belowRatedTorqueGainTableX[i] = dr[i];
+		params->belowRatedTorqueGainTableY[i] = Kopt[i]/1.0e3;
+	}		
+}
 
+void ikTuneDeratingPitchStrategy(ikPowmanParams *params) {
+/*
+This is an original implementation of derating strategy 3a as described by ECN in deliverable D2.1 of H2020 project CL-Windcon.
+The values for the literals have been kindly provided by ECN, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
+*/
+
+	int i;
+	
+	/*! [Optimum torque] */
+    /*
+	####################################################################
+					 Minimum pitch
+
+	Set parameters here:
+	*/
+	const int n = 11; /* number of points in the lookup table */
+	const double dr[] = {0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50}; /* - */
+	const double pitch[] = {0.00, 0.039449747839419, 0.058560350086376, 0.073725555631053, 0.086762305188347, 0.098108135965117, 0.108839079483571, 0.118773997213269, 0.128018250433713, 0.136903315900539, 0.145235569651071}; /* rad */
+	/*
+	####################################################################
+	*/
+	/*! [Optimum torque] */
+
+	params->minimumPitchTableN = n;
+	for (i = 0; i < n; i++) {
+		params->minimumPitchTableX[i] = dr[i];
+		params->minimumPitchTableY[i] = pitch[i]/3.1416*180.0;
+	}		
 }
 
 void ikTunePitchPIGainSchedule(ikConLoopParams *params) {
-
+	int i;
+	
 	/*! [Gain schedule] */
     /*
 	####################################################################
                      Pitch Gain Schedule
 
+	Set parameters here:
+	*/
+	const int n = 10; /* number of points in the lookup table */
+	const double pitch[] = {0.0, 3.8424, 5.6505, 8.1091, 11.6797, 14.5687, 17.1140, 19.4472, 21.6249, 23.6774}; /* degrees */
+	const double gain[] = {2.1000, 2.1000, 2.0727, 1.7182, 1.5182, 1.3545, 1.2636, 1.1909, 1.1182, 1.0545}; /* - */
+	/*
     ####################################################################
 	*/
-
-	params->linearController.gainSchedN = 10;
-
-    params->linearController.gainSchedX[0] = 0.0;
-    params->linearController.gainSchedX[1] = 3.8424;
-    params->linearController.gainSchedX[2] = 5.6505;
-    params->linearController.gainSchedX[3] = 8.1091;
-    params->linearController.gainSchedX[4] = 11.6797;
-    params->linearController.gainSchedX[5] = 14.5687;
-    params->linearController.gainSchedX[6] = 17.1140;
-    params->linearController.gainSchedX[7] = 19.4472;
-    params->linearController.gainSchedX[8] = 21.6249;
-    params->linearController.gainSchedX[9] = 23.6774;
-
-    params->linearController.gainSchedY[0] = 1.0000;
-    params->linearController.gainSchedY[1] = 1.0000;
-    params->linearController.gainSchedY[2] = 2.0727;
-    params->linearController.gainSchedY[3] = 1.7182;
-    params->linearController.gainSchedY[4] = 1.5182;
-    params->linearController.gainSchedY[5] = 1.3545;
-    params->linearController.gainSchedY[6] = 1.2636;
-    params->linearController.gainSchedY[7] = 1.1909;
-    params->linearController.gainSchedY[8] = 1.1182;
-    params->linearController.gainSchedY[9] = 1.0545;
 	/*! [Gain schedule] */
-	
+
+	params->linearController.gainSchedN = n;
+
+	for (i = 0; i < n; i++) {
+		params->linearController.gainSchedX[i] = pitch[i];
+		params->linearController.gainSchedY[i] = gain[i];
+	}	
 }
 
 void ikTunePitchLowpassFilter(ikConLoopParams *params, double T) {

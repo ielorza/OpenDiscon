@@ -48,8 +48,7 @@ extern "C" {
      * 
      * @par Outputs
      * @li maximum pitch: upper pitch angle limit, in degrees, get via @link ikTpman_getOutput @endlink
-     * @li minimum pitch: lower pitch angle limit, in degrees, get via @link ikTpman_getOutput @endlink
-     * @li minimum torque: lower torque limit for speed regulation, in kN, get via @link ikTpman_getOutput @endlink
+     * @li minimum torque: lower torque limit for speed regulation, in kNm, get via @link ikTpman_getOutput @endlink
      * 
      * @par Unit block
      * 
@@ -76,7 +75,6 @@ extern "C" {
         /* @cond */
         int state;
         double minTorque;
-        double minPitch;
         double maxPitch;
         ikLutbl * minPitchTbl;
         double maxPitchExt;
@@ -93,9 +91,9 @@ extern "C" {
      * @brief Torque-pitch manager initialisation parameters
      */
     typedef struct ikTpmanParams {
-        ikLutbl * minPitchTbl; /**< pointer to minimum pitch table.
-                                * If set to NULL, minimum pitch equals
-                                * external minimum pitch.*/
+		/* @cond */
+		int foo;
+		/* @endcond */
     } ikTpmanParams;
     
     /**

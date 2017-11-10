@@ -36,7 +36,13 @@ extern "C" {
 	
 	void ikTuneDrivetrainDamper(ikConLoopParams *params, double T);
 	
-	void ikTuneOptimumTorqueCurve(ikClwindconWTConParams *params);
+	void ikTuneSpeedRange(ikConLoopParams *params);
+	
+	void ikTunePowerSettings(ikPowmanParams *params);
+	
+	void ikTuneDeratingTorqueStrategy(ikPowmanParams *params);
+	
+	void ikTuneDeratingPitchStrategy(ikPowmanParams *params);
 	
 	void ikTunePitchLowpassFilter(ikConLoopParams *params, double T);
 	
@@ -51,8 +57,6 @@ extern "C" {
 	void ikTuneTorquePI(ikConLoopParams *params, double T);
 
 	void ikTunePitchPIGainSchedule(ikConLoopParams *params);
-
-	double ikGetPreferredTorque(double generatorSpeed);
 
 #ifdef __cplusplus
 }

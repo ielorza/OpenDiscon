@@ -28,12 +28,9 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <string.h>
 
-#include "../ikTpman/ikTpman.h"
+#include "ikTpman.h"
 
 int ikTpman_init(ikTpman *self, const ikTpmanParams *params) {
-    /* register lookup table */
-    self->minPitchTbl = params->minPitchTbl;
-
     /* set state to 0 */
     self->state = 0;
 
@@ -41,7 +38,6 @@ int ikTpman_init(ikTpman *self, const ikTpmanParams *params) {
 }
 
 void ikTpman_initParams(ikTpmanParams *params) {
-    params->minPitchTbl = NULL;
 }
 
 int ikTpman_step(ikTpman *self, double torque, double maxTorque, double minTorqueExt, double pitch, double maxPitchExt, double minPitchExt) {
@@ -53,21 +49,13 @@ int ikTpman_step(ikTpman *self, double torque, double maxTorque, double minTorqu
     self->minTorqueExt = minTorqueExt;
     self->maxTorque = maxTorque;
 
-    /* apply lookup table and external minimum pitch */
-    if (NULL != self->minPitchTbl) {
-        self->minPitch = ikLutbl_eval(self->minPitchTbl, torque);
-        self->minPitch = self->minPitch > minPitchExt ? self->minPitch : minPitchExt;
-    } else {
-        self->minPitch = minPitchExt;
-    }
-
     /* transition between states if necessary */
     switch (self->state) {
         case 0:
-            if ((torque >= maxTorque) || (pitch > self->minPitch)) self->state = 1;
+            if ((torque >= maxTorque) || (pitch > self->minPitchExt)) self->state = 1;
             break;
         case 1:
-            if (pitch <= self->minPitch) self->state = 0;
+            if (pitch <= self->minPitchExt) self->state = 0;
             break;
     }
 
@@ -76,7 +64,7 @@ int ikTpman_step(ikTpman *self, double torque, double maxTorque, double minTorqu
         case 0:
             self->maxPitch = pitch;
             self->maxPitch = self->maxPitch < maxPitchExt ? self->maxPitch : maxPitchExt;
-            self->maxPitch = self->maxPitch > self->minPitch ? self->maxPitch : self->minPitch;
+            self->maxPitch = self->maxPitch > self->minPitchExt ? self->maxPitch : self->minPitchExt;
             self->minTorque = minTorqueExt;
             break;
         case 1:
@@ -94,10 +82,6 @@ int ikTpman_getOutput(const ikTpman *self, double *output, const char *name) {
     const char *sep;
 
     /* pick up the signal names */
-    if (!strcmp(name, "minimum pitch")) {
-        *output = self->minPitch;
-        return 0;
-    }
     if (!strcmp(name, "maximum pitch")) {
         *output = self->maxPitch;
         return 0;

@@ -35,10 +35,7 @@ int ikClwindconWTCon_init(ikClwindconWTCon *self, const ikClwindconWTConParams *
 	params_.collectivePitchControl.linearController.gainShedXVal = &(self->priv.collectivePitchDemand);
 
 	/* pass reference to preferred torque for use in torque control */
-	params_.torqueControl.setpointGenerator.preferredControlAction = &(self->priv.preferredTorque);
-
-	/* register preferred torque function */
-	self->priv.preferredTorqueFcn = params->preferredTorqueFcn;
+	params_.torqueControl.setpointGenerator.preferredControlAction = &(self->priv.belowRatedTorque);
 
     /* pass on the member parameters */
     err = ikConLoop_init(&(self->priv.dtdamper), &(params_.drivetrainDamper));
@@ -49,6 +46,8 @@ int ikClwindconWTCon_init(ikClwindconWTCon *self, const ikClwindconWTConParams *
     if (err) return -3;
     err = ikTpman_init(&(self->priv.tpManager), &(params_.torquePitchManager));
     if (err) return -5;
+	err = ikPowman_init(&(self->priv.powerManager), &(params_.powerManager));
+	if (err) return -6;
     
     /* initialise feedback signals */
     self->priv.torqueFromTorqueCon = 0.0;
@@ -63,27 +62,32 @@ void ikClwindconWTCon_initParams(ikClwindconWTConParams *params) {
     ikConLoop_initParams(&(params->drivetrainDamper));
     ikConLoop_initParams(&(params->torqueControl));
     ikTpman_initParams(&(params->torquePitchManager));
-
-	/* disable preferred torque */
-	params->preferredTorqueFcn = NULL;
+	ikPowman_initParams(&(params->powerManager));
 }
 
 int ikClwindconWTCon_step(ikClwindconWTCon *self) {
+	
+	/* run power manager */
+	self->priv.maxTorqueFromPowman = ikPowman_step(&(self->priv.powerManager), self->in.deratingRatio, self->in.maximumSpeed, self->in.generatorSpeed);
+	ikPowman_getOutput(&(self->priv.powerManager), &(self->priv.minPitchFromPowman), "minimum pitch");
+	ikPowman_getOutput(&(self->priv.powerManager), &(self->priv.belowRatedTorque), "below rated torque");
+
+	/* calculate minimum pitch */
+	self->priv.minPitch = self->priv.minPitchFromPowman > self->in.externalMinimumPitch ? self->priv.minPitchFromPowman : self->in.externalMinimumPitch;
+	
+	/* calculate maximum torque */
+	self->priv.maxTorque = self->priv.maxTorqueFromPowman < self->in.externalMaximumTorque ? self->priv.maxTorqueFromPowman : self->in.externalMaximumTorque;
 
     /* run torque-pitch manager */
-    self->priv.tpManState = ikTpman_step(&(self->priv.tpManager), self->priv.torqueFromTorqueCon, self->in.externalMaximumTorque, self->in.externalMinimumTorque, self->priv.collectivePitchDemand, self->in.externalMaximumPitch, self->in.externalMinimumPitch);
+    self->priv.tpManState = ikTpman_step(&(self->priv.tpManager), self->priv.torqueFromTorqueCon, self->priv.maxTorque, self->in.externalMinimumTorque, self->priv.collectivePitchDemand, self->in.externalMaximumPitch, self->priv.minPitch);
     ikTpman_getOutput(&(self->priv.tpManager), &(self->priv.maxPitch), "maximum pitch");
-    ikTpman_getOutput(&(self->priv.tpManager), &(self->priv.minPitch), "minimum pitch");
     ikTpman_getOutput(&(self->priv.tpManager), &(self->priv.minTorque), "minimum torque");
-
+	
     /* run drivetrain damper */
     self->priv.torqueFromDtdamper = ikConLoop_step(&(self->priv.dtdamper), 0.0, self->in.generatorSpeed, -(self->in.externalMaximumTorque), self->in.externalMaximumTorque);
 
-	/* calculate preferred torque */
-	if (NULL != self->priv.preferredTorqueFcn) self->priv.preferredTorque = (*(self->priv.preferredTorqueFcn))(self->in.generatorSpeed);
-
     /* run torque control */
-    self->priv.torqueFromTorqueCon = ikConLoop_step(&(self->priv.torquecon), self->in.maximumSpeed, self->in.generatorSpeed, self->priv.minTorque, self->in.externalMaximumTorque);
+    self->priv.torqueFromTorqueCon = ikConLoop_step(&(self->priv.torquecon), self->in.maximumSpeed, self->in.generatorSpeed, self->priv.minTorque, self->priv.maxTorque);
 
     /* calculate torque demand */
     self->out.torqueDemand = self->priv.torqueFromDtdamper + self->priv.torqueFromTorqueCon;
@@ -120,8 +124,8 @@ int ikClwindconWTCon_getOutput(const ikClwindconWTCon *self, double *output, con
         *output = self->priv.maxPitch;
         return 0;
     }
-    if (!strcmp(name, "external maximum torque")) {
-        *output = self->in.externalMaximumTorque;
+    if (!strcmp(name, "maximum torque")) {
+        *output = self->priv.maxTorque;
         return 0;
     }
     if (!strcmp(name, "minimum torque")) {
@@ -132,10 +136,23 @@ int ikClwindconWTCon_getOutput(const ikClwindconWTCon *self, double *output, con
         *output = self->priv.collectivePitchDemand;
         return 0;
     }
+    if (!strcmp(name, "maximum torque from power manager")) {
+        *output = self->priv.maxTorqueFromPowman;
+        return 0;
+    }
+    if (!strcmp(name, "minimum pitch from power manager")) {
+        *output = self->priv.minPitchFromPowman;
+        return 0;
+    }
 
     /* pick up the block names */
     sep = strstr(name, ">");
     if (NULL == sep) return -1;
+	if (!strncmp(name, "power manager", strlen(name) - strlen(sep))) {
+        err = ikPowman_getOutput(&(self->priv.powerManager), output, sep + 1);
+        if (err) return -1;
+        else return 0;
+    }
 	if (!strncmp(name, "torque-pitch manager", strlen(name) - strlen(sep))) {
         err = ikTpman_getOutput(&(self->priv.tpManager), output, sep + 1);
         if (err) return -1;

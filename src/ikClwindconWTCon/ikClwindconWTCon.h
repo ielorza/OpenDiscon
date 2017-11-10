@@ -32,6 +32,7 @@ extern "C" {
 
 #include "ikConLoop.h"
 #include "ikTpman.h"
+#include "ikPowman.h"
 
     /**
      * @struct ikClwindconWTConInputs
@@ -44,6 +45,7 @@ extern "C" {
         double externalMinimumPitch; /**<external minimum pitch in degrees*/
         double maximumSpeed; /**<maximum generator speed setpoing in rad/s*/
         double generatorSpeed; /**<generator speed in rad/s*/
+		double deratingRatio; /**<derating ratio, non-dimensional*/
     } ikClwindconWTConInputs;
 
     /**
@@ -60,6 +62,7 @@ extern "C" {
     /* @cond */
 
     typedef struct ikClwindconWTConPrivate {
+		ikPowman powerManager;
         ikTpman   tpManager;
         ikConLoop dtdamper;
         ikConLoop torquecon;
@@ -68,12 +71,14 @@ extern "C" {
         double minPitch;
         double maxSpeed;
         int tpManState;
+		double maxTorque;
         double minTorque;
         double torqueFromDtdamper;
         double torqueFromTorqueCon;
         double collectivePitchDemand;
-		double (*preferredTorqueFcn)(double);
-		double preferredTorque;
+		double belowRatedTorque;
+		double minPitchFromPowman;
+		double maxTorqueFromPowman;
     } ikClwindconWTConPrivate;
     /* @endcond */
 
@@ -133,7 +138,7 @@ extern "C" {
         ikConLoopParams torqueControl; /**<torque control initialisation parameters*/
         ikConLoopParams collectivePitchControl; /**<collective pitch control initialisation parameters*/
         ikTpmanParams torquePitchManager; /**<torque-pitch manager inintialisation parameters*/
-		double (*preferredTorqueFcn)(double); /**<pointer to function which, given the generator speed in rad/s, returns the preferred torque in kNm*/
+		ikPowmanParams powerManager; /**<power manager initialisation parameters*/
     } ikClwindconWTConParams;
 
     /**
@@ -146,6 +151,7 @@ extern "C" {
      * @li -2: torque control initialisation failed
      * @li -3: collective pitch control initialisation failed
      * @li -5: torque-pitch manager initialisation failed
+	 * @li -6: power manager initialisation failed
      */
     int ikClwindconWTCon_init(ikClwindconWTCon *self, const ikClwindconWTConParams *params);
 
