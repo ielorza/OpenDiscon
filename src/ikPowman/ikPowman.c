@@ -74,7 +74,7 @@ double ikPowman_step(ikPowman *self, double deratingRatio, double maxSpeed, doub
 	self->measuredSpeed = measuredSpeed;
 	
 	/* calculate maximum torque */	
-	self->maximumTorque = self->ratedPower/maxSpeed/self->efficiency;
+	self->maximumTorque = (1-deratingRatio)*self->ratedPower/maxSpeed/self->efficiency;
 	
 	/* calculate below rated torque */
 	self->belowRatedTorque = ikLutbl_eval(&(self->lutblKopt), deratingRatio)*measuredSpeed*measuredSpeed;
