@@ -89,12 +89,13 @@ extern "C" {
      * This is and ad hoc wind turbine controller for CL-Windcon.
      * 
      * @par Inputs
-	 * @li external maximum torque: externally set upper torque limit, specify via @link ikClwindconWTConInputs.externalMaximumTorque @endlink at @link in @endlink
-	 * @li external minimum torque: externally set lower torque limit, specify via @link ikClwindconWTConInputs.externalMinimumTorque @endlink at @link in @endlink
-	 * @li external maximum pitch: externally set upper pitch limit, specify via @link ikClwindconWTConInputs.externalMaximumPitch @endlink at @link in @endlink
-	 * @li external minimum pitch: externally set lower pitch limit, specify via @link ikClwindconWTConInputs.externalMinimumPitch @endlink at @link in @endlink
-     * @li maximum speed: maximum generator speed setpoint, specify via @link ikClwindconWTConInputs.maximumSpeed @endlink at @link in @endlink
-     * @li generator speed: current generator speed, specify via @link ikClwindconWTConInputs.generatorSpeed @endlink at @link in @endlink
+	 * @li external maximum torque: externally set upper torque limit, in kNm, specify via @link ikClwindconWTConInputs.externalMaximumTorque @endlink at @link in @endlink
+	 * @li external minimum torque: externally set lower torque limit, in kNm, specify via @link ikClwindconWTConInputs.externalMinimumTorque @endlink at @link in @endlink
+	 * @li external maximum pitch: externally set upper pitch limit, in degrees, specify via @link ikClwindconWTConInputs.externalMaximumPitch @endlink at @link in @endlink
+	 * @li external minimum pitch: externally set lower pitch limit, in degrees, specify via @link ikClwindconWTConInputs.externalMinimumPitch @endlink at @link in @endlink
+     * @li maximum speed: maximum generator speed setpoint, in rad/s, specify via @link ikClwindconWTConInputs.maximumSpeed @endlink at @link in @endlink
+     * @li generator speed: current generator speed, in rad/s, specify via @link ikClwindconWTConInputs.generatorSpeed @endlink at @link in @endlink
+     * @li derating ratio: externally set derating ratio, non-dimensional, specify via @link ikClwindconWTConInputs.deratingRatio @endlink at @link in @endlink
      * 
      * @par Outputs
      * @li torque demand: in kNm, get via @link ikClwindconWTConOutputs.torqueDemand @endlink at @link out @endlink

@@ -118,6 +118,13 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 * The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c Gain schedule
 *
+* @subsubsection minpitch Minimum pitch
+*
+* The minimum pitch is altered depending on the derating ratio. This is implemented as a look-up table.
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Minimum pitch
+*
 * @section references References
 *
 * [1] Tony Burton, Nick Jenkins, David Sharpe, Ervin Bossanyi, <em> Wind Energy Handbook </em>, ISBN: 978-0-470-69975-1.

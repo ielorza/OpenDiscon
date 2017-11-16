@@ -411,6 +411,21 @@
          d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
          id="path11234-0-9" />
     </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker11232-9-7-8"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path11234-5-0-4" />
+    </marker>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -420,7 +435,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.3199054"
-     inkscape:cx="385.84518"
+     inkscape:cx="256.66926"
      inkscape:cy="225.95505"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -455,25 +470,25 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15.02537632px;line-height:125%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="200.73166"
-       y="424.61649"
+       y="388.99149"
        id="text5026"><tspan
          sodipodi:role="line"
          x="169.91055"
-         y="424.61649"
+         y="388.99149"
          id="tspan5028"><tspan
            x="169.91055"
-           y="424.61649"
+           y="388.99149"
            id="tspan5030"
            style="text-align:end;text-anchor:end">external minimum torque</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15.02537632px;line-height:125%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="170.48282"
-       y="470.39178"
+       y="434.76678"
        id="text5020"><tspan
          sodipodi:role="line"
          x="170.48282"
-         y="470.39178"
+         y="434.76678"
          id="tspan5022">external maximum pitch</tspan></text>
     <text
        xml:space="preserve"
@@ -541,69 +556,69 @@
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11232-9)"
-       d="m 174.37763,420.90415 h 48.18213"
+       d="m 174.37763,385.27915 h 48.18213"
        id="path4409-7"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11232-92)"
-       d="m 174.37763,466.2466 h 48.18213"
+       d="m 174.37763,430.6216 h 48.18213"
        id="path4409-1"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11232-9-7)"
-       d="m 174.37763,602.95871 h 48.18213"
+       d="m 174.37763,567.33371 h 48.18213"
        id="path4409-7-5"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15.02537632px;line-height:125%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="294.7063"
-       y="607.10388"
+       y="571.47888"
        id="text5014"><tspan
          sodipodi:role="line"
          x="169.10353"
-         y="607.10388"
+         y="571.47888"
          id="tspan5016"><tspan
            x="169.10353"
-           y="607.10388"
+           y="571.47888"
            id="tspan5018"
            style="text-align:end;text-anchor:end">generator speed</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15.02537632px;line-height:125%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="203.31415"
-       y="380.73038"
+       y="345.10538"
        id="text5026-2"><tspan
          sodipodi:role="line"
          x="169.45569"
-         y="380.73038"
+         y="345.10538"
          id="tspan5028-6"><tspan
            x="169.45569"
-           y="380.73038"
+           y="345.10538"
            id="tspan5030-2"
            style="text-align:end;text-anchor:end">external maximum torque</tspan></tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11232-9-64)"
-       d="m 174.37763,375.56174 h 48.18213"
+       d="m 174.37763,339.93674 h 48.18213"
        id="path4409-7-1"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11232-92-6-4)"
-       d="m 174.37763,557.61628 h 48.18213"
+       d="m 174.37763,521.99128 h 48.18213"
        id="path4409-1-2-8"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15.02537632px;line-height:125%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="292.68872"
-       y="561.76147"
+       y="526.13647"
        id="text5008-1"><tspan
          sodipodi:role="line"
          x="170.45346"
-         y="561.76147"
+         y="526.13647"
          id="tspan5010-7"><tspan
            x="170.45346"
-           y="561.76147"
+           y="526.13647"
            id="tspan5012-7"
            style="text-align:end;text-anchor:end">maximum speed</tspan></tspan></text>
     <path
@@ -655,16 +670,36 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15.02537632px;line-height:125%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="170.48282"
-       y="515.73419"
+       y="480.10919"
        id="text5020-6"><tspan
          sodipodi:role="line"
          x="170.48282"
-         y="515.73419"
+         y="480.10919"
          id="tspan5022-6">external minimum pitch</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11232-92-53)"
-       d="m 174.37763,511.58902 h 48.18213"
+       d="m 174.37763,475.96402 h 48.18213"
        id="path4409-1-8"
        inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11232-9-7-8)"
+       d="m 174.37764,615.15976 h 48.18212"
+       id="path4409-7-5-5"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:15.02537727px;line-height:125%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="294.7063"
+       y="619.30493"
+       id="text5014-1"><tspan
+         style="stroke-width:1px"
+         sodipodi:role="line"
+         x="169.10353"
+         y="619.30493"
+         id="tspan5016-1"><tspan
+           x="169.10353"
+           y="619.30493"
+           id="tspan5018-4"
+           style="text-align:end;text-anchor:end;stroke-width:1px">derating ratio</tspan></tspan></text>
   </g>
 </svg>

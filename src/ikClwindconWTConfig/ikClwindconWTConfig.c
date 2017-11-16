@@ -127,7 +127,6 @@ void ikTunePowerSettings(ikPowmanParams *params) {
 void ikTuneDeratingTorqueStrategy(ikPowmanParams *params) {
 /*
 This is an original implementation of derating strategy 3a as described by ECN in deliverable D2.1 of H2020 project CL-Windcon.
-The values for the literals have been kindly provided by ECN, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
 */
 
 	int i;
@@ -141,6 +140,7 @@ The values for the literals have been kindly provided by ECN, who have calculate
 
 	Q = Kopt(dr) * w^2
 
+	The default values for dr and Kopt have been kindly provided by ECN, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
 	Set parameters here:
 	*/
 	const int n = 11; /* number of points in the lookup table */
@@ -161,16 +161,16 @@ The values for the literals have been kindly provided by ECN, who have calculate
 void ikTuneDeratingPitchStrategy(ikPowmanParams *params) {
 /*
 This is an original implementation of derating strategy 3a as described by ECN in deliverable D2.1 of H2020 project CL-Windcon.
-The values for the literals have been kindly provided by ECN, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
 */
 
 	int i;
 	
-	/*! [Optimum torque] */
+	/*! [Minimum pitch] */
     /*
 	####################################################################
 					 Minimum pitch
 
+	The default values have been kindly provided by ECN, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
 	Set parameters here:
 	*/
 	const int n = 11; /* number of points in the lookup table */
@@ -179,7 +179,7 @@ The values for the literals have been kindly provided by ECN, who have calculate
 	/*
 	####################################################################
 	*/
-	/*! [Optimum torque] */
+	/*! [Minimum pitch] */
 
 	params->minimumPitchTableN = n;
 	for (i = 0; i < n; i++) {
