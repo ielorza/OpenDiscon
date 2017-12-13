@@ -58,6 +58,16 @@ extern "C" {
 
 	void ikTunePitchPIGainSchedule(ikConLoopParams *params);
 
+	void ikConfigureRotorForIpc(ikIpcParams *params);
+
+	void ikTuneIpcMyPI(ikConLoopParams *params, double T);
+
+	void ikTuneIpcMzPI(ikConLoopParams *params, double T);
+
+	void ikTuneYawByIpc(ikConLoopParams *params, double T);
+
+	void ikTuneYawByIpcLowpassFilter(ikConLoopParams *params, double T);
+
 #ifdef __cplusplus
 }
 #endif
