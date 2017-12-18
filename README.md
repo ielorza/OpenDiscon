@@ -1,11 +1,15 @@
 # OpenDiscon
-Open source implementation of the legacy GHBladed external controller interface.
+Open source implementation of popular wind turbine controller interfaces.
 
-This code is for the production of a shared library implementing the DISCON interface for the DTU 10MW model.
+Currently available distributions are for:
+- The legacy GHBladed external controller interface (typically called DISCON, hence the name OpenDiscon).
+- Level-2 MATLAB S-Function for Simulink.
 
-The source code is at ./src. The main implementation file is discon.c.
-It uses IK4-IKERLAN's library OpenWitcon, included as a submodule.
+Currently available configurations are for:
+- CL-Windcon (DTU 10MW model).
+
+This uses IK4-IKERLAN's library OpenWitcon, included as a submodule.
 Documentation is provided in Doxygen format. To generate it, run Doxygen on ./doc/Doxyfile.
 
 For compilation, run cmake here.
-This will generate the VS solution or makefiles for straightforward compilation, depending on your toolchain.
+This will generate the VS solution, makefiles or MATLAB function for straightforward compilation, depending on your toolchain.
