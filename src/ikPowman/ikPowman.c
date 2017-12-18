@@ -25,6 +25,9 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 /* @cond */
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "ikPowman.h"
 
 int ikPowman_init(ikPowman *self, const ikPowmanParams *params) {
