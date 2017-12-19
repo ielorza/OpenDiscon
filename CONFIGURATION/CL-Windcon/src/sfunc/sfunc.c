@@ -931,7 +931,7 @@ static void mdlInitializeSizes(SimStruct *S)
 static void mdlInitializeSampleTimes(SimStruct *S)
 {
     /* Register one pair for each sample time */
-    ssSetSampleTime(S, 0, CONTINUOUS_SAMPLE_TIME);
+    ssSetSampleTime(S, 0, INHERITED_SAMPLE_TIME);
     ssSetOffsetTime(S, 0, 0.0);
 
 } /* end mdlInitializeSampleTimes */
@@ -1218,8 +1218,22 @@ static void mdlInitializeSampleTimes(SimStruct *S)
  */
 static void mdlOutputs(SimStruct *S, int_T tid)
 {
+} /* end mdlOutputs */
+
+
+#define MDL_UPDATE  /* Change to #undef to remove function */
+#if defined(MDL_UPDATE)
+  /* Function: mdlUpdate ======================================================
+   * Abstract:
+   *    This function is called once for every major integration time step.
+   *    Discrete states are typically updated here, but this function is useful
+   *    for performing any tasks that should only take place once per
+   *    integration step.
+   */
+  static void mdlUpdate(SimStruct *S, int_T tid)
+  {
 	static ikClwindconWTCon con; /* the controller instance */
-    static init = 0; /* initialisation flag */
+    static int init = 0; /* initialisation flag */
 		
 	if (!init) {
         /* initialise the controller */
@@ -1258,20 +1272,6 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	*(ssGetOutputPortRealSignal(S,1)) = con.out.pitchDemandBlade1; /* deg */
 	*(ssGetOutputPortRealSignal(S,2)) = con.out.pitchDemandBlade2; /* deg */
 	*(ssGetOutputPortRealSignal(S,3)) = con.out.pitchDemandBlade3; /* deg */
-} /* end mdlOutputs */
-
-
-#define MDL_UPDATE  /* Change to #undef to remove function */
-#if defined(MDL_UPDATE)
-  /* Function: mdlUpdate ======================================================
-   * Abstract:
-   *    This function is called once for every major integration time step.
-   *    Discrete states are typically updated here, but this function is useful
-   *    for performing any tasks that should only take place once per
-   *    integration step.
-   */
-  static void mdlUpdate(SimStruct *S, int_T tid)
-  {
   }
 #endif /* MDL_UPDATE */
 
