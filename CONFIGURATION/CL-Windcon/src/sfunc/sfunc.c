@@ -602,7 +602,7 @@ static void mdlInitializeSizes(SimStruct *S)
      */
     ssSetNumRWork(         S, 0);   /* number of real work vector elements   */
     ssSetNumIWork(         S, 0);   /* number of integer work vector elements*/
-    ssSetNumPWork(         S, 0);   /* number of pointer work vector elements*/
+    ssSetNumPWork(         S, 1);   /* number of pointer work vector elements*/
     ssSetNumModes(         S, 0);   /* number of mode work vector elements   */
     ssSetNumNonsampledZCs( S, 0);   /* number of nonsampled zero crossings   */
 
@@ -1130,6 +1130,12 @@ static void mdlInitializeSampleTimes(SimStruct *S)
    */
   static void mdlInitializeConditions(SimStruct *S)
   {
+	ikClwindconWTCon *con = (ikClwindconWTCon*) ssGetPWorkValue(S, 0);
+	/* Initialise controller */
+	ikClwindconWTConParams param;
+	ikClwindconWTCon_initParams(&param);
+	setParams(&param);
+	ikClwindconWTCon_init(con, &param);
   }
 #endif /* MDL_INITIALIZE_CONDITIONS */
 
@@ -1144,6 +1150,14 @@ static void mdlInitializeSampleTimes(SimStruct *S)
    */
   static void mdlStart(SimStruct *S)
   {
+	/* Allocate controller */
+	void *ptr = calloc(1, sizeof(ikClwindconWTCon));
+	if (ptr == NULL) {
+		/* report memory allocation error */
+		ssSetErrorStatus(S, "Memory allocation error");
+		return;
+	}
+	ssSetPWorkValue(S, 0, ptr);
   }
 #endif /*  MDL_START */
 
@@ -1232,46 +1246,35 @@ static void mdlOutputs(SimStruct *S, int_T tid)
    */
   static void mdlUpdate(SimStruct *S, int_T tid)
   {
-	static ikClwindconWTCon con; /* the controller instance */
-    static int init = 0; /* initialisation flag */
-		
-	if (!init) {
-        /* initialise the controller */
-		ikClwindconWTConParams param;
-		ikClwindconWTCon_initParams(&param);
-		setParams(&param);
-		ikClwindconWTCon_init(&con, &param);
-        /* remember we did this */
-        init = 1;
-	}
+	ikClwindconWTCon *con = (ikClwindconWTCon*) ssGetPWorkValue(S, 0);
 
-	con.in.deratingRatio = **(ssGetInputPortRealSignalPtrs(S,0));
-	con.in.externalMaximumTorque = 230.0; /* kNm */
-	con.in.externalMinimumTorque = 0.0; /* kNm */
-	con.in.externalMaximumPitch = 90.0; /* deg */
-	con.in.externalMinimumPitch = 0.0; /* deg */
-	con.in.generatorSpeed = **(ssGetInputPortRealSignalPtrs(S,1)); /* rad/s */
-	con.in.maximumSpeed = 480.0/30*3.1416; /* rpm to rad/s */
-	con.in.azimuth = **(ssGetInputPortRealSignalPtrs(S,2)); /* deg */
-	con.in.maximumIndividualPitch = 10.0; /* deg */
-	con.in.yawErrorReference = 0.0; /* deg */
-	con.in.yawError = **(ssGetInputPortRealSignalPtrs(S,3)); /* deg */
-	con.in.bladeRootMoments[0].c[0] = **(ssGetInputPortRealSignalPtrs(S,4)); /* kNm */
-	con.in.bladeRootMoments[0].c[1] = **(ssGetInputPortRealSignalPtrs(S,5)); /* kNm */
-	con.in.bladeRootMoments[0].c[2] = 0.0; /* kNm */
-	con.in.bladeRootMoments[1].c[0] = **(ssGetInputPortRealSignalPtrs(S,6)); /* kNm */
-	con.in.bladeRootMoments[1].c[1] = **(ssGetInputPortRealSignalPtrs(S,7)); /* kNm */
-	con.in.bladeRootMoments[1].c[2] = 0.0; /* kNm */
-	con.in.bladeRootMoments[2].c[0] = **(ssGetInputPortRealSignalPtrs(S,8)); /* kNm */
-	con.in.bladeRootMoments[2].c[1] = **(ssGetInputPortRealSignalPtrs(S,9)); /* kNm */
-	con.in.bladeRootMoments[2].c[2] = 0.0; /* kNm */
+	con->in.deratingRatio = **(ssGetInputPortRealSignalPtrs(S,0));
+	con->in.externalMaximumTorque = 230.0; /* kNm */
+	con->in.externalMinimumTorque = 0.0; /* kNm */
+	con->in.externalMaximumPitch = 90.0; /* deg */
+	con->in.externalMinimumPitch = 0.0; /* deg */
+	con->in.generatorSpeed = **(ssGetInputPortRealSignalPtrs(S,1)); /* rad/s */
+	con->in.maximumSpeed = 480.0/30*3.1416; /* rpm to rad/s */
+	con->in.azimuth = **(ssGetInputPortRealSignalPtrs(S,2)); /* deg */
+	con->in.maximumIndividualPitch = 10.0; /* deg */
+	con->in.yawErrorReference = 0.0; /* deg */
+	con->in.yawError = **(ssGetInputPortRealSignalPtrs(S,3)); /* deg */
+	con->in.bladeRootMoments[0].c[0] = **(ssGetInputPortRealSignalPtrs(S,4)); /* kNm */
+	con->in.bladeRootMoments[0].c[1] = **(ssGetInputPortRealSignalPtrs(S,5)); /* kNm */
+	con->in.bladeRootMoments[0].c[2] = 0.0; /* kNm */
+	con->in.bladeRootMoments[1].c[0] = **(ssGetInputPortRealSignalPtrs(S,6)); /* kNm */
+	con->in.bladeRootMoments[1].c[1] = **(ssGetInputPortRealSignalPtrs(S,7)); /* kNm */
+	con->in.bladeRootMoments[1].c[2] = 0.0; /* kNm */
+	con->in.bladeRootMoments[2].c[0] = **(ssGetInputPortRealSignalPtrs(S,8)); /* kNm */
+	con->in.bladeRootMoments[2].c[1] = **(ssGetInputPortRealSignalPtrs(S,9)); /* kNm */
+	con->in.bladeRootMoments[2].c[2] = 0.0; /* kNm */
 	
-	ikClwindconWTCon_step(&con);
+	ikClwindconWTCon_step(con);
 	
-	*(ssGetOutputPortRealSignal(S,0)) = con.out.torqueDemand; /* kNm */
-	*(ssGetOutputPortRealSignal(S,1)) = con.out.pitchDemandBlade1; /* deg */
-	*(ssGetOutputPortRealSignal(S,2)) = con.out.pitchDemandBlade2; /* deg */
-	*(ssGetOutputPortRealSignal(S,3)) = con.out.pitchDemandBlade3; /* deg */
+	*(ssGetOutputPortRealSignal(S,0)) = con->out.torqueDemand; /* kNm */
+	*(ssGetOutputPortRealSignal(S,1)) = con->out.pitchDemandBlade1; /* deg */
+	*(ssGetOutputPortRealSignal(S,2)) = con->out.pitchDemandBlade2; /* deg */
+	*(ssGetOutputPortRealSignal(S,3)) = con->out.pitchDemandBlade3; /* deg */
   }
 #endif /* MDL_UPDATE */
 
@@ -1309,6 +1312,11 @@ static void mdlOutputs(SimStruct *S, int_T tid)
  */
 static void mdlTerminate(SimStruct *S)
 {
+	/* free the memory allocated in mdlStart */
+	if (ssGetPWork(S) != NULL) {
+		void *ptr = ssGetPWorkValue(S,0);
+		if (ptr != NULL) free(ptr);
+	}
 }
 
 
