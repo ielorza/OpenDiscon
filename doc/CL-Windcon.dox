@@ -39,6 +39,11 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 * The basic controller provided by OpenDiscon for CL-Windcon is an instance of @link ikClwindconWTCon @endlink,
 * with the control loop parameters given by @link ikClwindconWTConfig.c @endlink.
 *
+* @subsection samplinginterval Sampling interval
+*
+* The basic controller is a discrete-time implementation, with a sampling interval given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Sampling interval
+*
 * @subsection dtdamper Drivetrain damper
 *
 * The drivetrain damper is an implementation of the following transfer function from [1]:
@@ -47,13 +52,14 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 * @f]
 *
 * The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
-* @snippet ikClwindconWTConfig.c CL-Windcon drivetrain damper
+* @snippet ikClwindconWTConfig.c Drivetrain damper
 *
 * @subsection torquecon Torque control
 *
 * @subsubsection torquepi PI
 *
-* The torque controller is a PI, with its parameters given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* The torque controller forces the generator torque against the optimum torque curve and regulates the generator speed when the minimum speed is reached.
+* It is a PI, with its parameters given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c Torque PI
 * Note the negative gains, which are necessary to make the torque increase when the speed error (setpoint minus measurement) is negative, and viceversa.
 *
@@ -87,7 +93,8 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 *
 * @subsubsection pitchpi PI
 *
-* The pitch controller is a PI, with its parameters given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* The pitch controller forces the collective blade pitch against the minimum pitch and regulates the generator speed when the maximum speed is reached.
+* It is a PI, with its parameters given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c Pitch PI
 * Note the negative gains, which are necessary to make the pitch angle increase when the speed error (setpoint minus measurement) is negative, and viceversa.
 *
@@ -124,6 +131,30 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 *
 * The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c Minimum pitch
+*
+* @subsection ipc Individual pitch control
+*
+* @subsubsection regipc Regular IPC
+* Regular individual pitch control consists of two PI controllers, for moments around axes y and z, respectively.
+* The gains are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c IPC My PI
+* @snippet ikClwindconWTConfig.c IPC Mz PI
+*
+* Note that regular IPC gains are zero, i.e. regular IPC is disabled, in this configuration. Yaw by IPC is used instead.
+*
+* @subsubsection yawbyipc Yaw by IPC
+*
+* Yaw by IPC introduces a moment around axis z to make the turbine yaw. It consists of a PI controller, which regulates the yaw error.
+* Its gains are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Yaw by IPC PI
+*
+* The yaw error measurement is low-pass filtered with a second order filter with the following transfer function:
+* @f[
+*  H(s) = \frac{\omega^2}{s^2 + 2 \xi \omega s + \omega^2}
+* @f]
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Yaw by IPC lowpass filter
 *
 * @section references References
 *
