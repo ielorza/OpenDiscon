@@ -19,18 +19,22 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 /** @mainpage
 *
-* OpenDiscon is Ikerlan's open source implementation of the legacy GHBladed DISCON interface,
-* which is also used by other wind turbine simulation software packages such as FAST.
-* It is based on Ikerlan's open source wind turbine control software library @ref openwitcon.
+* OpenDiscon is <a href="http://www.ikerlan.es/en/">Ikerlan</a>'s open source implementation of popular wind turbine controller interfaces.
+* based on <a href="http://www.ikerlan.es/en/">Ikerlan</a>'s open source wind turbine control software library @ref openwitcon.
 *
 * OpenDiscon is publicly available under a rather permissive @subpage license "license", so
 * it may be used in many ways, possibly some of which have not been imagined by the authors.
-* However, it provides out-of-the-box implementations for the following uses:
-* - @ref clwindcon
+* However, it provides some out-of-the-box implementations. Using them requires compilation and linking.
+* CMake files are provided for easy production of the project files, makefiles or MATLAB functions suitable for the
+* user's toolchain and options.
 *
-* Using OpenDiscon's out-of-the-box implementations starts with their compilation and linking.
-* CMake files are provided for easy production of the project or makefiles suitable for the
-* user's toolchain. Simply run <a href="https://cmake.org/">CMake</a> on the OpenDiscon directory.
+* To make the above happen, run <a href="https://cmake.org/">CMake</a> on the OpenDiscon directory.
+* Two options are available:
+* - CONFIGURATION
+*  - CL-Windcon: a controller for @ref clwindcon
+* - DISTRIBUTION
+*  - DISCON: an implementation of the legacy GHBladed DISCON interface, which is also used by other wind turbine simulation software packages such as FAST.
+*  - S-Function: a Simulink block implementation.
 *
 */
 
@@ -54,7 +58,7 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 /** @page openwitcon OpenWitcon
 *
-* OpenWitcon is Ikerlan's open source wind turbine controller software library. It is publicly available
+* OpenWitcon is <a href="http://www.ikerlan.es/en/">Ikerlan</a>'s open source wind turbine controller software library. It is publicly available
 * <a href="https://github.com/ielorza/OpenWitcon">here</a>.
 *
 * OpenDiscon makes heavy use of OpenWitcon, and the OpenDiscon repository has the OpenWitcon repository
