@@ -26,7 +26,18 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 #include "ikClwindconWTConfig.h"
 
 void setParams(ikClwindconWTConParams *param) {
-	const double T = 0.01;
+	/*! [Sampling interval] */
+    /*
+	####################################################################
+                     Sampling interval
+
+    Set sampling interval here:
+	*/
+	const double T = 0.01; /* [s] */
+    /*
+    ####################################################################
+	*/
+	/*! [Sampling interval] */
 
 	ikTuneDrivetrainDamper(&(param->drivetrainDamper), T);
 	ikTuneSpeedRange(&(param->torqueControl));
@@ -45,7 +56,7 @@ void setParams(ikClwindconWTConParams *param) {
 
 void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
 
-	/*! [CL-Windcon drivetrain damper] */
+	/*! [Drivetrain damper] */
     /*
 	####################################################################
                      Drivetrain damper
@@ -64,7 +75,7 @@ void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
     /*
     ####################################################################
 	*/
-	/*! [CL-Windcon drivetrain damper] */
+	/*! [Drivetrain damper] */
 
 
     /*
@@ -582,6 +593,7 @@ This is an original implementation of the yaw by IPC strategy in 87e4a2fe8e8ac8f
 
     The sampling time is given by function parameter T.
 
+	The default values have been kindly provided by TUDelft, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
     Set parameters here:
 	*/
     const double Kp = -0.064; /* [-] */
@@ -631,6 +643,7 @@ This is an original implementation of the yaw by IPC strategy in 87e4a2fe8e8ac8f
 
     The sampling time is given by function parameter T.
 
+	The default values have been kindly provided by TUDelft, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
     Set parameters here:
 	*/
     const double w = 0.6283185; /* [rad/s] */
