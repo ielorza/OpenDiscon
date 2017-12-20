@@ -8,7 +8,7 @@ Currently available distributions are for:
 Currently available configurations are for:
 - CL-Windcon (DTU 10MW model).
 
-This uses IK4-IKERLAN's library OpenWitcon, included as a submodule.
+This uses [IK4-IKERLAN](http://www.ikerlan.es/en/)'s library OpenWitcon, included as a submodule.
 Documentation is provided in Doxygen format. To generate it, run Doxygen on ./doc/Doxyfile.
 
 For compilation, run cmake here.
