@@ -65,8 +65,21 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	DATA[41] = (float) (con.out.pitchDemandBlade1/180.0*3.1416); /* deg to rad */
 	DATA[42] = (float) (con.out.pitchDemandBlade2/180.0*3.1416); /* deg to rad */
 	DATA[43] = (float) (con.out.pitchDemandBlade3/180.0*3.1416); /* deg to rad */
-	DATA[44] = (float) (con.out.pitchDemandBlade1/180.0*3.1416); /* deg to rad (collective pitch angle) */
+	err = ikClwindconWTCon_getOutput(&con, &output, "collective pitch demand");
+	DATA[44] = (float) (output/180.0*3.1416); /* deg to rad (collective pitch angle) */
 
-	err = ikClwindconWTCon_getOutput(&con, &output, "maximum torque");
+	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>pitch y from control");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>pitch z from control");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>My");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>Mz");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>pitch increment 1");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>pitch increment 2");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>pitch increment 3");
 	fwrite(&(output), 1, sizeof(output), f);
 }	

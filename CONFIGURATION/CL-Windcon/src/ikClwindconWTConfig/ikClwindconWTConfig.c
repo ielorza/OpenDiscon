@@ -51,6 +51,11 @@ void setParams(ikClwindconWTConParams *param) {
 	ikTuneTorqueLowpassFilter(&(param->torqueControl), T);
 	ikTuneTorqueNotches(&(param->torqueControl), T);
 	ikTuneTorquePI(&(param->torqueControl), T);
+	ikConfigureRotorForIpc(&(param->individualPitchControl));
+	ikTuneIpcMyPI(&(param->individualPitchControl.controlMy), T);
+	ikTuneIpcMzPI(&(param->individualPitchControl.controlMz), T);
+	ikTuneYawByIpc(&(param->yawByIpc), T);
+	ikTuneYawByIpcLowpassFilter(&(param->yawByIpc), T);
 
 }
 
@@ -499,7 +504,7 @@ void ikTuneIpcMyPI(ikConLoopParams *params, double T) {
     Set parameters here:
 	*/
     const double Kp = 0.0; /* [deg/kNm] */
-    const double Ki = 0.0; /* [deg/kNms] */
+    const double Ki = -1.0e-3; /* [deg/kNms] */
     /*
     ####################################################################
 	*/
@@ -546,7 +551,7 @@ void ikTuneIpcMzPI(ikConLoopParams *params, double T) {
     Set parameters here:
 	*/
     const double Kp = 0.0; /* [deg/kNm] */
-    const double Ki = 0.0; /* [deg/kNms] */
+    const double Ki = -1.0e-3; /* [deg/kNms] */
     /*
     ####################################################################
 	*/
@@ -596,8 +601,8 @@ This is an original implementation of the yaw by IPC strategy in 87e4a2fe8e8ac8f
 	The default values have been kindly provided by TUDelft, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
     Set parameters here:
 	*/
-    const double Kp = -0.064; /* [-] */
-    const double Ki = -0.0008; /* [1/s] */
+    const double Kp = 0.0; /* [-] */
+    const double Ki = 0.0; /* [1/s] */
     /*
     ####################################################################
 	*/
