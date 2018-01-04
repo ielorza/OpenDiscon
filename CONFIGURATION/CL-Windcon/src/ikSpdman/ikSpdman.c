@@ -70,7 +70,8 @@ int ikSpdman_step(ikSpdman *self, double generatorSpeed, double rotorSpeed, doub
 	diff = azimuth - self->lastAzimuth;
 	diff = diff < self->azimuthRange/2 ? diff : diff - self->azimuthRange;
 	diff = diff > -self->azimuthRange/2 ? diff : diff + self->azimuthRange;
-	self->signals[3] = self->T * diff / 180.0 * 3.14159265358979;
+	self->signals[2] = self->gbratio * diff / self->T / 180.0 * 3.14159265358979;
+	self->lastAzimuth = azimuth;
 	
 	/* run diagnoser */
 	ikSensorDiagnoser_step(&(self->diagnoser), self->ok, self->signals);
@@ -102,6 +103,18 @@ int ikSpdman_getOutput(const ikSpdman *self, double *output, const char *name) {
     /* pick up the signal names */
     if (!strcmp(name, "generator speed equivalent")) {
         *output = self->outputSpeed;
+        return 0;
+    }
+    if (!strcmp(name, "signal 1")) {
+        *output = self->signals[0];
+        return 0;
+    }
+    if (!strcmp(name, "signal 2")) {
+        *output = self->signals[1];
+        return 0;
+    }
+    if (!strcmp(name, "signal 3")) {
+        *output = self->signals[2];
         return 0;
     }
 

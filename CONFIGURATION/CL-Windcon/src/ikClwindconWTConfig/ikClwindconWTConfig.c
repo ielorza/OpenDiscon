@@ -56,6 +56,7 @@ void setParams(ikClwindconWTConParams *param) {
 	ikTuneIpcMzPI(&(param->individualPitchControl.controlMz), T);
 	ikTuneYawByIpc(&(param->yawByIpc), T);
 	ikTuneYawByIpcLowpassFilter(&(param->yawByIpc), T);
+	ikConfigureSpeedManager(&(param->speedSensorManager), T);
 
 }
 
@@ -675,4 +676,16 @@ This is an original implementation of the yaw by IPC strategy in 87e4a2fe8e8ac8f
     params->linearController.measurementTfs.tfParams[1].enable = 1;
     params->linearController.measurementTfs.tfParams[1].b[0] = (0.5*T*w)*(0.5*T*w) / (1 + T*d*w + (0.5*T*w)*(0.5*T*w));
 
+}
+
+void ikConfigureSpeedManager(ikSpdmanParams *params, double T) {
+	
+	params->diagnoser.nStepsToFault = 10;
+	params->diagnoser.tolerance = 1.0;
+	
+	params->gearboxRatio = 50.0;
+	params->T = T;
+	params->minAzimuth = 0.0;
+	params->maxAzimuth = 360.0;
+	
 }

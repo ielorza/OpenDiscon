@@ -223,6 +223,11 @@ int ikClwindconWTCon_getOutput(const ikClwindconWTCon *self, double *output, con
         if (err) return -1;
         else return 0;
     }
+	if (!strncmp(name, "speed sensor manager", strlen(name) - strlen(sep))) {
+        err = ikSpdman_getOutput(&(self->priv.speedSensorManager), output, sep + 1);
+        if (err) return -1;
+        else return 0;
+    }
 
 
     return -2;

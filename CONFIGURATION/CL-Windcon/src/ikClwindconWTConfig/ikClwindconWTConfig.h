@@ -68,6 +68,8 @@ extern "C" {
 
 	void ikTuneYawByIpcLowpassFilter(ikConLoopParams *params, double T);
 
+	void ikConfigureSpeedManager(ikSpdmanParams *params, double T);
+
 #ifdef __cplusplus
 }
 #endif

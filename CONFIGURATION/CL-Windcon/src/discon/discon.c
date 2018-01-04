@@ -19,6 +19,7 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 #define NINT(a) ((a) >= 0.0 ? (int) ((a)+0.5) : ((a)-0.5))
 
+#include "ikClwindconInputMod.h"
 #include "ikClwindconWTConfig.h"
 #include "OpenDiscon_EXPORT.h"
 #include <stdio.h>
@@ -44,6 +45,7 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	con.in.externalMaximumPitch = 90.0; /* deg */
 	con.in.externalMinimumPitch = 0.0; /* deg */
 	con.in.generatorSpeed = (double) DATA[19]; /* rad/s */
+	con.in.rotorSpeed = (double) DATA[20]; /* rad/s */
 	con.in.maximumSpeed = 480.0/30*3.1416; /* rpm to rad/s */
 	con.in.azimuth = 180.0/3.1416 * (double) DATA[59]; /* rad to deg */
 	con.in.maximumIndividualPitch = 10.0; /* deg */
@@ -59,6 +61,7 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	con.in.bladeRootMoments[2].c[1] = 1.0e-3 * (double) DATA[31]; /* Nm to kNm */
 	con.in.bladeRootMoments[2].c[2] = 0.0; /* kNm */
 	
+	ikClwindconInputMod(&(con.in));
 	ikClwindconWTCon_step(&con);
 	
 	DATA[46] = (float) (con.out.torqueDemand*1.0e3); /* kNm to Nm */
@@ -81,5 +84,13 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>pitch increment 2");
 	fwrite(&(output), 1, sizeof(output), f);
 	err = ikClwindconWTCon_getOutput(&con, &output, "individual pitch control>pitch increment 3");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "generator speed equivalent");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "speed sensor manager>signal 1");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "speed sensor manager>signal 2");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "speed sensor manager>signal 3");
 	fwrite(&(output), 1, sizeof(output), f);
 }	
