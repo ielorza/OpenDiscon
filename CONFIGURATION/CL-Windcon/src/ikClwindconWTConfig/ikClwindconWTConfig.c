@@ -504,7 +504,7 @@ void ikTuneIpcMyPI(ikConLoopParams *params, double T) {
     Set parameters here:
 	*/
     const double Kp = 0.0; /* [deg/kNm] */
-    const double Ki = -1.0e-3; /* [deg/kNms] */
+    const double Ki = -0.1e-3; /* [deg/kNms] */
     /*
     ####################################################################
 	*/
@@ -551,7 +551,7 @@ void ikTuneIpcMzPI(ikConLoopParams *params, double T) {
     Set parameters here:
 	*/
     const double Kp = 0.0; /* [deg/kNm] */
-    const double Ki = -1.0e-3; /* [deg/kNms] */
+    const double Ki = -0.1e-3; /* [deg/kNms] */
     /*
     ####################################################################
 	*/
