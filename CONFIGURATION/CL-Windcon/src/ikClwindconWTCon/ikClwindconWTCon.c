@@ -52,6 +52,8 @@ int ikClwindconWTCon_init(ikClwindconWTCon *self, const ikClwindconWTConParams *
 	if (err) return -7;
 	err = ikConLoop_init(&(self->priv.yawByIpc), &(params_.yawByIpc));
 	if (err) return -8;
+	err = ikSpdman_init(&(self->priv.speedSensorManager), &(params_.speedSensorManager));
+	if (err) return -9;
     
     /* initialise feedback signals */
     self->priv.torqueFromTorqueCon = 0.0;
@@ -69,13 +71,18 @@ void ikClwindconWTCon_initParams(ikClwindconWTConParams *params) {
 	ikPowman_initParams(&(params->powerManager));
 	ikIpc_initParams(&(params->individualPitchControl));
 	ikConLoop_initParams(&(params->yawByIpc));
+	ikSpdman_initParams(&(params->speedSensorManager));
 }
 
 int ikClwindconWTCon_step(ikClwindconWTCon *self) {
 	int i;
 	
+	/* run speed sensor manager */
+	ikSpdman_step(&(self->priv.speedSensorManager), self->in.generatorSpeed, self->in.rotorSpeed, self->in.azimuth);
+	ikSpdman_getOutput(&(self->priv.speedSensorManager), &(self->priv.generatorSpeedEquivalent), "generator speed equivalent");
+	
 	/* run power manager */
-	self->priv.maxTorqueFromPowman = ikPowman_step(&(self->priv.powerManager), self->in.deratingRatio, self->in.maximumSpeed, self->in.generatorSpeed);
+	self->priv.maxTorqueFromPowman = ikPowman_step(&(self->priv.powerManager), self->in.deratingRatio, self->in.maximumSpeed, self->priv.generatorSpeedEquivalent);
 	ikPowman_getOutput(&(self->priv.powerManager), &(self->priv.minPitchFromPowman), "minimum pitch");
 	ikPowman_getOutput(&(self->priv.powerManager), &(self->priv.belowRatedTorque), "below rated torque");
 
@@ -91,16 +98,16 @@ int ikClwindconWTCon_step(ikClwindconWTCon *self) {
     ikTpman_getOutput(&(self->priv.tpManager), &(self->priv.minTorque), "minimum torque");
 	
     /* run drivetrain damper */
-    self->priv.torqueFromDtdamper = ikConLoop_step(&(self->priv.dtdamper), 0.0, self->in.generatorSpeed, -(self->in.externalMaximumTorque), self->in.externalMaximumTorque);
+    self->priv.torqueFromDtdamper = ikConLoop_step(&(self->priv.dtdamper), 0.0, self->priv.generatorSpeedEquivalent, -(self->in.externalMaximumTorque), self->in.externalMaximumTorque);
 
     /* run torque control */
-    self->priv.torqueFromTorqueCon = ikConLoop_step(&(self->priv.torquecon), self->in.maximumSpeed, self->in.generatorSpeed, self->priv.minTorque, self->priv.maxTorque);
+    self->priv.torqueFromTorqueCon = ikConLoop_step(&(self->priv.torquecon), self->in.maximumSpeed, self->priv.generatorSpeedEquivalent, self->priv.minTorque, self->priv.maxTorque);
 
     /* calculate torque demand */
     self->out.torqueDemand = self->priv.torqueFromDtdamper + self->priv.torqueFromTorqueCon;
 
     /* run collective pitch control */
-    self->priv.collectivePitchDemand = ikConLoop_step(&(self->priv.colpitchcon), self->in.maximumSpeed, self->in.generatorSpeed, self->priv.minPitch, self->priv.maxPitch);
+    self->priv.collectivePitchDemand = ikConLoop_step(&(self->priv.colpitchcon), self->in.maximumSpeed, self->priv.generatorSpeedEquivalent, self->priv.minPitch, self->priv.maxPitch);
 
 	/* run yaw by ipc */
 	self->priv.individualPitchForYaw = ikConLoop_step(&(self->priv.yawByIpc), self->in.yawErrorReference, self->in.yawError, -self->in.maximumIndividualPitch, self->in.maximumIndividualPitch);
@@ -171,6 +178,10 @@ int ikClwindconWTCon_getOutput(const ikClwindconWTCon *self, double *output, con
     }
     if (!strcmp(name, "individual pitch for yaw")) {
         *output = self->priv.individualPitchForYaw;
+        return 0;
+    }
+    if (!strcmp(name, "generator speed equivalent")) {
+        *output = self->priv.generatorSpeedEquivalent;
         return 0;
     }
 

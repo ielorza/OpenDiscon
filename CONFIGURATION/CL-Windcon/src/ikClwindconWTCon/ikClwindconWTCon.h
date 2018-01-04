@@ -34,6 +34,7 @@ extern "C" {
 #include "ikTpman.h"
 #include "ikPowman.h"
 #include "ikIpc.h"
+#include "ikSpdman.h"
 
     /**
      * @struct ikClwindconWTConInputs
@@ -46,6 +47,7 @@ extern "C" {
         double externalMinimumPitch; /**<external minimum pitch in degrees*/
         double maximumSpeed; /**<maximum generator speed setpoing in rad/s*/
         double generatorSpeed; /**<generator speed in rad/s*/
+		double rotorSpeed; /**<rotor speed in rad/s*/
 		double deratingRatio; /**<derating ratio, non-dimensional*/
 		double azimuth; /**<azimuth in degrees*/
 		ikVector bladeRootMoments[3]; /**<blade root moments in kNm*/
@@ -88,6 +90,8 @@ extern "C" {
 		ikIpc ipc;
 		ikConLoop yawByIpc;
 		double individualPitchForYaw;
+		ikSpdman speedSensorManager;
+		double generatorSpeedEquivalent;
     } ikClwindconWTConPrivate;
     /* @endcond */
 
@@ -156,6 +160,7 @@ extern "C" {
 		ikPowmanParams powerManager; /**<power manager initialisation parameters*/
 		ikIpcParams individualPitchControl; /**<individual pitch control parameters*/
 		ikConLoopParams yawByIpc; /**<yaw by ipc parameters*/
+		ikSpdmanParams speedSensorManager; /**<speed sensor manager parameters*/
     } ikClwindconWTConParams;
 
     /**
@@ -171,6 +176,7 @@ extern "C" {
 	 * @li -6: power manager initialisation failed
 	 * @li -7: individual pitch control initialisation failed
 	 * @li -8: yaw by ipc initialisation failed
+	 * @li -9: speed sensor manager initialisation failed
      */
     int ikClwindconWTCon_init(ikClwindconWTCon *self, const ikClwindconWTConParams *params);
 
