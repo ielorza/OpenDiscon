@@ -117,6 +117,18 @@ int ikSpdman_getOutput(const ikSpdman *self, double *output, const char *name) {
         *output = self->signals[2];
         return 0;
     }
+    if (!strcmp(name, "ok 1")) {
+        *output = self->ok[0];
+        return 0;
+    }
+    if (!strcmp(name, "ok 2")) {
+        *output = self->ok[1];
+        return 0;
+    }
+    if (!strcmp(name, "ok 3")) {
+        *output = self->ok[2];
+        return 0;
+    }
 
     /* pick up the block names */
     sep = strstr(name, ">");

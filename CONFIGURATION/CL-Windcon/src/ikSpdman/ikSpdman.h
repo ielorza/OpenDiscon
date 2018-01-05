@@ -55,9 +55,19 @@ extern "C" {
      * 
      * @image html ikSpdman_block_diagram.svg
      * 
-     * @par State machine
+     * @par Map
      * 
-     * @image html ikSpdman_state_machine.svg
+     <table>
+		<tr> <th>ok 1</th> <th>ok 2</th> <th>ok 3</th> <th>status</th> <th>mux</th> </tr>
+		<tr> <td>1</td>    <td>1</td>    <td>1</td>    <td>0</td>      <td>1</td>   </tr>
+		<tr> <td>0</td>    <td>1</td>    <td>1</td>    <td>-1</td>     <td>2</td>   </tr>
+		<tr> <td>1</td>    <td>0</td>    <td>1</td>    <td>-2</td>     <td>1</td>   </tr>
+		<tr> <td>1</td>    <td>1</td>    <td>0</td>    <td>-3</td>     <td>1</td>   </tr>
+		<tr> <td>0</td>    <td>0</td>    <td>1</td>    <td>-4</td>     <td>1</td>   </tr>
+		<tr> <td>0</td>    <td>1</td>    <td>0</td>    <td>-4</td>     <td>1</td>   </tr>
+		<tr> <td>1</td>    <td>0</td>    <td>0</td>    <td>-4</td>     <td>1</td>   </tr>
+		<tr> <td>0</td>    <td>0</td>    <td>0</td>    <td>-4</td>     <td>1</td>   </tr>
+	 </table>
      * 
      * @par Methods
      * @li @link ikSpdman_initParams @endlink initialise initialisation parameter structure
