@@ -599,7 +599,6 @@ This is an original implementation of the yaw by IPC strategy in 87e4a2fe8e8ac8f
 
     The sampling time is given by function parameter T.
 
-	The default values have been kindly provided by TUDelft, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
     Set parameters here:
 	*/
     const double Kp = 0.0; /* [-] */
@@ -680,10 +679,29 @@ This is an original implementation of the yaw by IPC strategy in 87e4a2fe8e8ac8f
 
 void ikConfigureSpeedManager(ikSpdmanParams *params, double T) {
 	
-	params->diagnoser.nStepsToFault = 10;
-	params->diagnoser.tolerance = 1.0;
+	/*! [Speed sensor manager] */
+	/*
+	####################################################################
+	                    Speed sensor management
+
+	Differences between the generator speed, rotor speed and azimuth derivative
+	(the latter two multiplied by the gearbox ratio) are considered a fault if
+	they are larger than tol for longer than N sampling intervals T.
+
+	Set parameters here:
+	*/
+	const int N = 10; /* [-] */
+	const double tol = 1.0; /* [rad/s] */
+	const double gbRatio = 50.0; /* [-] */
+    /*
+    ####################################################################
+	*/
+	/*! [Speed sensor manager] */
+
+	params->diagnoser.nStepsToFault = N;
+	params->diagnoser.tolerance = tol;
 	
-	params->gearboxRatio = 50.0;
+	params->gearboxRatio = gbRatio;
 	params->T = T;
 	params->minAzimuth = 0.0;
 	params->maxAzimuth = 360.0;

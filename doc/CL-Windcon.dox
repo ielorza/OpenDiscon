@@ -34,15 +34,17 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 * OpenDiscon caters to the needs of H2020 project CL-Windcon, by providing a controller specifically
 * tuned for compatibility with the Innwind 10 MW reference wind turbine model.
 *
-* @section basic Basic controller
+* @section intro Introduction
 *
-* The basic controller provided by OpenDiscon for CL-Windcon is an instance of @link ikClwindconWTCon @endlink,
+* The controller provided by OpenDiscon for CL-Windcon is an instance of @link ikClwindconWTCon @endlink,
 * with the control loop parameters given by @link ikClwindconWTConfig.c @endlink.
 *
 * @subsection samplinginterval Sampling interval
 *
-* The basic controller is a discrete-time implementation, with a sampling interval given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* The controller is a discrete-time implementation, with a sampling interval given in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c Sampling interval
+*
+* @section basic Basic controller
 *
 * @subsection dtdamper Drivetrain damper
 *
@@ -83,12 +85,6 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 * The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c 1st side-side tower mode filter
 *
-* @subsubsection kopt Optimum torque curve
-*
-* Below rated wind speed, the torque controller uses a quadratic speed-torque curve, along the lines of that described by [1].
-* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
-* @snippet ikClwindconWTConfig.c Optimum torque
-*
 * @subsection pitchcon Pitch control
 *
 * @subsubsection pitchpi PI
@@ -125,16 +121,26 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 * The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c Gain schedule
 *
-* @subsubsection minpitch Minimum pitch
+* @section derating Derating
+*
+* @subsection minpitch Minimum pitch
 *
 * The minimum pitch is altered depending on the derating ratio. This is implemented as a look-up table.
 *
 * The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c Minimum pitch
 *
-* @subsection ipc Individual pitch control
+* @subsection kopt Optimum torque curve
 *
-* @subsubsection regipc Regular IPC
+* Below rated wind speed, the torque controller uses a quadratic speed-torque curve, along the lines of that described by [1].
+* The gain of said curve varies depending on the derating ratio. This is implemented as a look-up table.
+*
+* The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Optimum torque
+*
+* @section ipc Individual pitch control
+*
+* @subsection regipc Regular IPC
 * Regular individual pitch control consists of two PI controllers, for moments around axes y and z, respectively.
 * The gains are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c IPC My PI
@@ -142,7 +148,7 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 *
 * Note that regular IPC gains are zero, i.e. regular IPC is disabled, in this configuration. Yaw by IPC is used instead.
 *
-* @subsubsection yawbyipc Yaw by IPC
+* @subsection yawbyipc Yaw by IPC
 *
 * Yaw by IPC introduces a moment around axis z to make the turbine yaw. It consists of a PI controller, which regulates the yaw error.
 * Its gains are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
@@ -155,6 +161,28 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 *
 * The parameters are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
 * @snippet ikClwindconWTConfig.c Yaw by IPC lowpass filter
+*
+* @section ftc Fault tolerance
+*
+* @subsection spdman Generator speed sensor redundancy
+*
+* The controller uses three different generator speed measurements:
+* - generator speed
+* - rotor speed (approx. generator speed divided by gearbox ratio)
+* - azimuth (approx. integral of rotor speed)
+*
+* If all three measurements are similar, the generator speed is used.
+* Dissimilarities are used for sensor failure diagnosis and, if the generator speed sensor is found to have failed, the rotor speed is used instead.
+*
+* The parameters dictating when the measurements are dissimilar are in @link ikClwindconWTConfig.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconWTConfig.c Speed sensor manager
+*
+* @subsection faults Sensor faults
+*
+* [Only for DISTRIBUTION = DISCON] A simple generator speed sensor fault introduction facility is provided.
+*
+* The parameters governing this fault are in @link ikClwindconInputMod.c @endlink, conveniently commented as follows:
+* @snippet ikClwindconInputMod.c Speed sensor fault
 *
 * @section references References
 *

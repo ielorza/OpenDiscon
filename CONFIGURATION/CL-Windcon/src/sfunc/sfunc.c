@@ -486,6 +486,7 @@ static void mdlInitializeSizes(SimStruct *S)
 	* 7 - blade 2 root My [kNm]
 	* 8 - blade 3 root Mx [kNm]
 	* 9 - blade 3 root My [kNm]
+	* 10 - rotor speed [rad/s]
 	*
 	* outputs are:
 	* 0 - generator torque demand [kNm]
@@ -493,7 +494,7 @@ static void mdlInitializeSizes(SimStruct *S)
 	* 2 - blade 2 pitch demand [deg]
 	* 3 - blade 3 pitch demand [deg]
 	*/
-    int_T nInputPorts  = 10;  /* number of input ports  */
+    int_T nInputPorts  = 11;  /* number of input ports  */
     int_T nOutputPorts = 4;  /* number of output ports */
     int_T needsInput   = 1;  /* direct feed through    */
 
@@ -1254,6 +1255,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	con->in.externalMaximumPitch = 90.0; /* deg */
 	con->in.externalMinimumPitch = 0.0; /* deg */
 	con->in.generatorSpeed = **(ssGetInputPortRealSignalPtrs(S,1)); /* rad/s */
+	con->in.rotorSpeed = **(ssGetInputPortRealSignalPtrs(S,10)); /* rad/s */
 	con->in.maximumSpeed = 480.0/30*3.1416; /* rpm to rad/s */
 	con->in.azimuth = **(ssGetInputPortRealSignalPtrs(S,2)); /* deg */
 	con->in.maximumIndividualPitch = 10.0; /* deg */

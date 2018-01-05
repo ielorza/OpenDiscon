@@ -34,10 +34,24 @@ void ikClwindconInputMod(ikClwindconWTConInputs *in) {
 void ikGeneratorSpeedSingalFail(ikClwindconWTConInputs *in) {
 	static _n = 0;
 	
+	/*! [Speed sensor fault] */
+	/*
+	####################################################################
+	                    Speed sensor fault
+
+	A generator speed measurement of val is enforced after N sampling
+	intervals (N <= 0 to disable).
+
+	Set parameters here:
+	*/
 	const int N = 10000;
 	const double val = 0.0;
+	/*
+	####################################################################
+	*/
+	/*! [Speed sensor fault] */
 	
-	if (_n < N) {
+	if (0 < N && _n < N) {
 		_n++;
 		return;
 	}

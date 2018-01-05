@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.6"
+    ComputedModelVersion    "1.9"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -66,9 +66,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "ielorza"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Dec 18 14:51:22 2017"
-  RTWModifiedTimeStamp	  435509080
-  ModelVersionFormat	  "1.%<AutoIncrement:6>"
+  LastModifiedDate	  "Fri Jan 05 11:00:16 2018"
+  RTWModifiedTimeStamp	  437050811
+  ModelVersionFormat	  "1.%<AutoIncrement:9>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -885,12 +885,12 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "16"
+    SIDHighWatermark	    "17"
     Block {
       BlockType		      SubSystem
       Name		      "OpenDiscon"
       SID		      "2"
-      Ports		      [10, 4]
+      Ports		      [11, 4]
       Position		      [105, 101, 440, 499]
       ZOrder		      2
       RequestExecContextInheritance off
@@ -928,11 +928,20 @@ Model {
 	}
 	Block {
 	  BlockType		  Inport
+	  Name			  "rotor speed [rad/s]"
+	  SID			  "17"
+	  Position		  [20, 338, 50, 352]
+	  ZOrder		  16
+	  Port			  "3"
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Inport
 	  Name			  "azimuth [deg]"
 	  SID			  "5"
 	  Position		  [20, 98, 50, 112]
 	  ZOrder		  4
-	  Port			  "3"
+	  Port			  "4"
 	  IconDisplay		  "Port number"
 	}
 	Block {
@@ -941,7 +950,7 @@ Model {
 	  SID			  "6"
 	  Position		  [20, 128, 50, 142]
 	  ZOrder		  5
-	  Port			  "4"
+	  Port			  "5"
 	  IconDisplay		  "Port number"
 	}
 	Block {
@@ -950,7 +959,7 @@ Model {
 	  SID			  "7"
 	  Position		  [20, 158, 50, 172]
 	  ZOrder		  6
-	  Port			  "5"
+	  Port			  "6"
 	  IconDisplay		  "Port number"
 	}
 	Block {
@@ -959,7 +968,7 @@ Model {
 	  SID			  "8"
 	  Position		  [20, 188, 50, 202]
 	  ZOrder		  7
-	  Port			  "6"
+	  Port			  "7"
 	  IconDisplay		  "Port number"
 	}
 	Block {
@@ -968,7 +977,7 @@ Model {
 	  SID			  "9"
 	  Position		  [20, 218, 50, 232]
 	  ZOrder		  8
-	  Port			  "7"
+	  Port			  "8"
 	  IconDisplay		  "Port number"
 	}
 	Block {
@@ -977,7 +986,7 @@ Model {
 	  SID			  "10"
 	  Position		  [20, 248, 50, 262]
 	  ZOrder		  9
-	  Port			  "8"
+	  Port			  "9"
 	  IconDisplay		  "Port number"
 	}
 	Block {
@@ -986,7 +995,7 @@ Model {
 	  SID			  "11"
 	  Position		  [20, 278, 50, 292]
 	  ZOrder		  10
-	  Port			  "9"
+	  Port			  "10"
 	  IconDisplay		  "Port number"
 	}
 	Block {
@@ -995,15 +1004,15 @@ Model {
 	  SID			  "12"
 	  Position		  [20, 308, 50, 322]
 	  ZOrder		  11
-	  Port			  "10"
+	  Port			  "11"
 	  IconDisplay		  "Port number"
 	}
 	Block {
 	  BlockType		  S-Function
 	  Name			  "S-Function"
 	  SID			  "1"
-	  Ports			  [10, 4]
-	  Position		  [165, 20, 305, 340]
+	  Ports			  [11, 4]
+	  Position		  [165, 20, 305, 370]
 	  ZOrder		  1
 	  FunctionName		  "OpenDiscon"
 	  EnableBusSupport	  off
@@ -1012,7 +1021,7 @@ Model {
 	  BlockType		  Outport
 	  Name			  "generator torque demand [kNm]"
 	  SID			  "13"
-	  Position		  [395, 53, 425, 67]
+	  Position		  [395, 63, 425, 77]
 	  ZOrder		  12
 	  IconDisplay		  "Port number"
 	}
@@ -1020,7 +1029,7 @@ Model {
 	  BlockType		  Outport
 	  Name			  "blade 1 pitch demand [deg]"
 	  SID			  "14"
-	  Position		  [395, 133, 425, 147]
+	  Position		  [395, 148, 425, 162]
 	  ZOrder		  13
 	  Port			  "2"
 	  IconDisplay		  "Port number"
@@ -1029,7 +1038,7 @@ Model {
 	  BlockType		  Outport
 	  Name			  "blade 2 pitch demand [deg]"
 	  SID			  "15"
-	  Position		  [395, 213, 425, 227]
+	  Position		  [395, 233, 425, 247]
 	  ZOrder		  14
 	  Port			  "3"
 	  IconDisplay		  "Port number"
@@ -1038,7 +1047,7 @@ Model {
 	  BlockType		  Outport
 	  Name			  "blade 3 pitch demand [deg]"
 	  SID			  "16"
-	  Position		  [395, 293, 425, 307]
+	  Position		  [395, 318, 425, 332]
 	  ZOrder		  15
 	  Port			  "4"
 	  IconDisplay		  "Port number"
@@ -1047,6 +1056,7 @@ Model {
 	  ZOrder		  15
 	  SrcBlock		  "derating ratio [-]"
 	  SrcPort		  1
+	  Points		  [95, 0]
 	  DstBlock		  "S-Function"
 	  DstPort		  1
 	}
@@ -1054,6 +1064,7 @@ Model {
 	  ZOrder		  17
 	  SrcBlock		  "azimuth [deg]"
 	  SrcPort		  1
+	  Points		  [95, 0]
 	  DstBlock		  "S-Function"
 	  DstPort		  3
 	}
@@ -1061,6 +1072,7 @@ Model {
 	  ZOrder		  22
 	  SrcBlock		  "blade 2 root My [kNm]"
 	  SrcPort		  1
+	  Points		  [95, 0]
 	  DstBlock		  "S-Function"
 	  DstPort		  8
 	}
@@ -1075,6 +1087,7 @@ Model {
 	  ZOrder		  18
 	  SrcBlock		  "yaw error [deg]"
 	  SrcPort		  1
+	  Points		  [95, 0]
 	  DstBlock		  "S-Function"
 	  DstPort		  4
 	}
@@ -1082,6 +1095,7 @@ Model {
 	  ZOrder		  19
 	  SrcBlock		  "blade 1 root Mx [kNm]"
 	  SrcPort		  1
+	  Points		  [95, 0]
 	  DstBlock		  "S-Function"
 	  DstPort		  5
 	}
@@ -1089,6 +1103,7 @@ Model {
 	  ZOrder		  20
 	  SrcBlock		  "blade 1 root My [kNm]"
 	  SrcPort		  1
+	  Points		  [95, 0]
 	  DstBlock		  "S-Function"
 	  DstPort		  6
 	}
@@ -1096,6 +1111,7 @@ Model {
 	  ZOrder		  21
 	  SrcBlock		  "blade 2 root Mx [kNm]"
 	  SrcPort		  1
+	  Points		  [95, 0]
 	  DstBlock		  "S-Function"
 	  DstPort		  7
 	}
@@ -1103,15 +1119,9 @@ Model {
 	  ZOrder		  16
 	  SrcBlock		  "generator speed [rad/s]"
 	  SrcPort		  1
+	  Points		  [95, 0]
 	  DstBlock		  "S-Function"
 	  DstPort		  2
-	}
-	Line {
-	  ZOrder		  24
-	  SrcBlock		  "blade 3 root My [kNm]"
-	  SrcPort		  1
-	  DstBlock		  "S-Function"
-	  DstPort		  10
 	}
 	Line {
 	  ZOrder		  28
@@ -1140,6 +1150,20 @@ Model {
 	  SrcPort		  1
 	  DstBlock		  "generator torque demand [kNm]"
 	  DstPort		  1
+	}
+	Line {
+	  ZOrder		  35
+	  SrcBlock		  "blade 3 root My [kNm]"
+	  SrcPort		  1
+	  DstBlock		  "S-Function"
+	  DstPort		  10
+	}
+	Line {
+	  ZOrder		  36
+	  SrcBlock		  "rotor speed [rad/s]"
+	  SrcPort		  1
+	  DstBlock		  "S-Function"
+	  DstPort		  11
 	}
       }
     }
