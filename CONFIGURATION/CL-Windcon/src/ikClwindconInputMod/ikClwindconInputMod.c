@@ -32,7 +32,7 @@ void ikClwindconInputMod(ikClwindconWTConInputs *in) {
 }
 
 void ikGeneratorSpeedSingalFail(ikClwindconWTConInputs *in) {
-	static _n = 0;
+	static int _n = 0;
 	
 	/*! [Speed sensor fault] */
 	/*
