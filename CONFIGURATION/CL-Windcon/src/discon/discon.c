@@ -29,7 +29,7 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	static ikClwindconWTCon con;
 	double output = -12.0;
 	static FILE *f = NULL;
-	const double deratingRatio = 0.2; /* later to be got via the supercontroller interface */
+	const double deratingRatio = 0.0; /* later to be got via the supercontroller interface */
 		
 	if (NINT(DATA[0]) == 0) {
 		ikClwindconWTConParams param;
@@ -48,7 +48,7 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	con.in.rotorSpeed = (double) DATA[20]; /* rad/s */
 	con.in.maximumSpeed = 480.0/30*3.1416; /* rpm to rad/s */
 	con.in.azimuth = 180.0/3.1416 * (double) DATA[59]; /* rad to deg */
-	con.in.maximumIndividualPitch = 10.0; /* deg */
+	con.in.maximumIndividualPitch = 0.0; /* deg */
 	con.in.yawErrorReference = 0.0; /* deg */
 	con.in.yawError = 180.0/3.1416 * (double) DATA[23]; /* rad to deg */
 	con.in.bladeRootMoments[0].c[0] = 1.0e-3 * (double) DATA[68]; /* Nm to kNm */

@@ -693,6 +693,7 @@ void ikConfigureSpeedManager(ikSpdmanParams *params, double T) {
 	const int N = 10; /* [-] */
 	const double tol = 1.0; /* [rad/s] */
 	const double gbRatio = 50.0; /* [-] */
+	const int nSteps = 3000; /* ################################################*/
     /*
     ####################################################################
 	*/
@@ -705,5 +706,7 @@ void ikConfigureSpeedManager(ikSpdmanParams *params, double T) {
 	params->T = T;
 	params->minAzimuth = 0.0;
 	params->maxAzimuth = 360.0;
+
+	params->diagnoser.nIgnoredSteps = nSteps; /* ################################################*/
 	
 }
