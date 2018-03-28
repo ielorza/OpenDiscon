@@ -690,10 +690,9 @@ void ikConfigureSpeedManager(ikSpdmanParams *params, double T) {
 
 	Set parameters here:
 	*/
-	const int N = 10; /* [-] */
+	const int N = 4; /* [-] */
 	const double tol = 1.0; /* [rad/s] */
 	const double gbRatio = 50.0; /* [-] */
-	const int nSteps = 3000; /* ################################################*/
     /*
     ####################################################################
 	*/
@@ -701,12 +700,12 @@ void ikConfigureSpeedManager(ikSpdmanParams *params, double T) {
 
 	params->diagnoser.nStepsToFault = N;
 	params->diagnoser.tolerance = tol;
-	
+
 	params->gearboxRatio = gbRatio;
 	params->T = T;
 	params->minAzimuth = 0.0;
 	params->maxAzimuth = 360.0;
 
-	params->diagnoser.nIgnoredSteps = nSteps; /* ################################################*/
+	
 	
 }

@@ -78,7 +78,7 @@ int ikClwindconWTCon_step(ikClwindconWTCon *self) {
 	int i;
 	
 	/* run speed sensor manager */
-	ikSpdman_step(&(self->priv.speedSensorManager), self->in.generatorSpeed, self->in.rotorSpeed, self->in.azimuth);
+	ikSpdman_step(&(self->priv.speedSensorManager), self->in.generatorSpeed, self->in.rotorSpeed, self->in.azimuth, self->in.ResetSignal);
 	ikSpdman_getOutput(&(self->priv.speedSensorManager), &(self->priv.generatorSpeedEquivalent), "generator speed equivalent");
 	
 	/* run power manager */

@@ -135,7 +135,7 @@ extern "C" {
 	 * @li -3: bad azimuth
 	 * @li -4: two or more bad signals
 	 */
-    int ikSpdman_step(ikSpdman *self, double generatorSpeed, double rotorSpeed, double azimuth);
+    int ikSpdman_step(ikSpdman *self, double generatorSpeed, double rotorSpeed, double azimuth, int ResetSignal);
     
     /**
      * Get output value by name. All signals named on the block diagram of

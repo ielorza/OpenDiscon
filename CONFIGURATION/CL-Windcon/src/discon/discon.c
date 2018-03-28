@@ -19,6 +19,7 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 #define NINT(a) ((a) >= 0.0 ? (int) ((a)+0.5) : ((a)-0.5))
 
+#include "ikClwindconResetSensorSignals.h"
 #include "ikClwindconInputMod.h"
 #include "ikClwindconWTConfig.h"
 #include "OpenDiscon_EXPORT.h"
@@ -62,8 +63,11 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	con.in.bladeRootMoments[2].c[2] = 0.0; /* kNm */
 	
 	ikClwindconInputMod(&(con.in));
+	ikClwindconResetSensorSignals(&(con.in));
 	ikClwindconWTCon_step(&con);
-	
+
+	/* ####################################### */
+
 	DATA[46] = (float) (con.out.torqueDemand*1.0e3); /* kNm to Nm */
 	DATA[41] = (float) (con.out.pitchDemandBlade1/180.0*3.1416); /* deg to rad */
 	DATA[42] = (float) (con.out.pitchDemandBlade2/180.0*3.1416); /* deg to rad */

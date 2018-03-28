@@ -54,6 +54,7 @@ extern "C" {
 		double maximumIndividualPitch; /**<maximum individual pitch in degrees*/
 		double yawErrorReference; /**<yaw error reference in degrees*/
 		double yawError; /**<yaw error in degrees*/
+		int ResetSignal;
     } ikClwindconWTConInputs;
 
     /**

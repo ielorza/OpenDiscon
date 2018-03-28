@@ -60,7 +60,7 @@ void ikSpdman_initParams(ikSpdmanParams *params) {
 	params->maxAzimuth = 360.0;
 }
 
-int ikSpdman_step(ikSpdman *self, double generatorSpeed, double rotorSpeed, double azimuth) {
+int ikSpdman_step(ikSpdman *self, double generatorSpeed, double rotorSpeed, double azimuth, int ResetSignal) {
     int i;
 	double diff;
 	
@@ -72,7 +72,7 @@ int ikSpdman_step(ikSpdman *self, double generatorSpeed, double rotorSpeed, doub
 	diff = diff > -self->azimuthRange/2 ? diff : diff + self->azimuthRange;
 	self->signals[2] = self->gbratio * diff / self->T / 180.0 * 3.14159265358979;
 	self->lastAzimuth = azimuth;
-	
+	self->diagnoser.ResetSignal = ResetSignal;
 	/* run diagnoser */
 	ikSensorDiagnoser_step(&(self->diagnoser), self->ok, self->signals);
 	
