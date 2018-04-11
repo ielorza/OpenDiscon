@@ -33,6 +33,8 @@ extern "C" {
 #include "ikConLoop.h"
 #include "ikTpman.h"
 #include "ikPowman.h"
+#include "ikIpc.h"
+#include "ikSpdman.h"
 
     /**
      * @struct ikClwindconWTConInputs
@@ -45,7 +47,14 @@ extern "C" {
         double externalMinimumPitch; /**<external minimum pitch in degrees*/
         double maximumSpeed; /**<maximum generator speed setpoing in rad/s*/
         double generatorSpeed; /**<generator speed in rad/s*/
+		double rotorSpeed; /**<rotor speed in rad/s*/
 		double deratingRatio; /**<derating ratio, non-dimensional*/
+		double azimuth; /**<azimuth in degrees*/
+		ikVector bladeRootMoments[3]; /**<blade root moments in kNm*/
+		double maximumIndividualPitch; /**<maximum individual pitch in degrees*/
+		double yawErrorReference; /**<yaw error reference in degrees*/
+		double yawError; /**<yaw error in degrees*/
+		int ResetSignal;
     } ikClwindconWTConInputs;
 
     /**
@@ -79,6 +88,11 @@ extern "C" {
 		double belowRatedTorque;
 		double minPitchFromPowman;
 		double maxTorqueFromPowman;
+		ikIpc ipc;
+		ikConLoop yawByIpc;
+		double individualPitchForYaw;
+		ikSpdman speedSensorManager;
+		double generatorSpeedEquivalent;
     } ikClwindconWTConPrivate;
     /* @endcond */
 
@@ -95,7 +109,13 @@ extern "C" {
 	 * @li external minimum pitch: externally set lower pitch limit, in degrees, specify via @link ikClwindconWTConInputs.externalMinimumPitch @endlink at @link in @endlink
      * @li maximum speed: maximum generator speed setpoint, in rad/s, specify via @link ikClwindconWTConInputs.maximumSpeed @endlink at @link in @endlink
      * @li generator speed: current generator speed, in rad/s, specify via @link ikClwindconWTConInputs.generatorSpeed @endlink at @link in @endlink
+	 * @li rotor speed: current rotor or low speed shaft speed, in rad/s, specify via @link ikClwindconWTConInputs.rotorSpeed @endlink at @link in @endlink
      * @li derating ratio: externally set derating ratio, non-dimensional, specify via @link ikClwindconWTConInputs.deratingRatio @endlink at @link in @endlink
+	 * @li azimuth: rotor azimuth angle, in degrees, specify via @link ikClwindconWTConInputs.azimuth @endlink at @link in @endlink
+	 * @li blade root moments: moments at blade roots, in kNm, specify via @link ikClwindconWTConInputs.bladeRootMoments @endlink at @link in @endlink
+	 * @li maximum individual pitch: maximum contribution from individual pitch control, in degrees, specify via @link ikClwindconWTConInputs.maximumIndividualPitch @endlink at @link in @endlink
+	 * @li yaw error reference: desired yaw error, in degrees, specify via @link ikClwindconWTConInputs.yawErrorReference @endlink at @link in @endlink
+	 * @li yaw error: current yaw error, in degrees, specify via @link ikClwindconWTConInputs.yawError @endlink at @link in @endlink
      * 
      * @par Outputs
      * @li torque demand: in kNm, get via @link ikClwindconWTConOutputs.torqueDemand @endlink at @link out @endlink
@@ -140,6 +160,9 @@ extern "C" {
         ikConLoopParams collectivePitchControl; /**<collective pitch control initialisation parameters*/
         ikTpmanParams torquePitchManager; /**<torque-pitch manager inintialisation parameters*/
 		ikPowmanParams powerManager; /**<power manager initialisation parameters*/
+		ikIpcParams individualPitchControl; /**<individual pitch control parameters*/
+		ikConLoopParams yawByIpc; /**<yaw by ipc parameters*/
+		ikSpdmanParams speedSensorManager; /**<speed sensor manager parameters*/
     } ikClwindconWTConParams;
 
     /**
@@ -153,6 +176,9 @@ extern "C" {
      * @li -3: collective pitch control initialisation failed
      * @li -5: torque-pitch manager initialisation failed
 	 * @li -6: power manager initialisation failed
+	 * @li -7: individual pitch control initialisation failed
+	 * @li -8: yaw by ipc initialisation failed
+	 * @li -9: speed sensor manager initialisation failed
      */
     int ikClwindconWTCon_init(ikClwindconWTCon *self, const ikClwindconWTConParams *params);
 

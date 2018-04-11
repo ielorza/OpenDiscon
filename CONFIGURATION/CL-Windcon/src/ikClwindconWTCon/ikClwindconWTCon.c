@@ -48,6 +48,12 @@ int ikClwindconWTCon_init(ikClwindconWTCon *self, const ikClwindconWTConParams *
     if (err) return -5;
 	err = ikPowman_init(&(self->priv.powerManager), &(params_.powerManager));
 	if (err) return -6;
+	err = ikIpc_init(&(self->priv.ipc), &(params_.individualPitchControl));
+	if (err) return -7;
+	err = ikConLoop_init(&(self->priv.yawByIpc), &(params_.yawByIpc));
+	if (err) return -8;
+	err = ikSpdman_init(&(self->priv.speedSensorManager), &(params_.speedSensorManager));
+	if (err) return -9;
     
     /* initialise feedback signals */
     self->priv.torqueFromTorqueCon = 0.0;
@@ -63,12 +69,20 @@ void ikClwindconWTCon_initParams(ikClwindconWTConParams *params) {
     ikConLoop_initParams(&(params->torqueControl));
     ikTpman_initParams(&(params->torquePitchManager));
 	ikPowman_initParams(&(params->powerManager));
+	ikIpc_initParams(&(params->individualPitchControl));
+	ikConLoop_initParams(&(params->yawByIpc));
+	ikSpdman_initParams(&(params->speedSensorManager));
 }
 
 int ikClwindconWTCon_step(ikClwindconWTCon *self) {
+	int i;
+	
+	/* run speed sensor manager */
+	ikSpdman_step(&(self->priv.speedSensorManager), self->in.generatorSpeed, self->in.rotorSpeed, self->in.azimuth, self->in.ResetSignal);
+	ikSpdman_getOutput(&(self->priv.speedSensorManager), &(self->priv.generatorSpeedEquivalent), "generator speed equivalent");
 	
 	/* run power manager */
-	self->priv.maxTorqueFromPowman = ikPowman_step(&(self->priv.powerManager), self->in.deratingRatio, self->in.maximumSpeed, self->in.generatorSpeed);
+	self->priv.maxTorqueFromPowman = ikPowman_step(&(self->priv.powerManager), self->in.deratingRatio, self->in.maximumSpeed, self->priv.generatorSpeedEquivalent);
 	ikPowman_getOutput(&(self->priv.powerManager), &(self->priv.minPitchFromPowman), "minimum pitch");
 	ikPowman_getOutput(&(self->priv.powerManager), &(self->priv.belowRatedTorque), "below rated torque");
 
@@ -84,21 +98,39 @@ int ikClwindconWTCon_step(ikClwindconWTCon *self) {
     ikTpman_getOutput(&(self->priv.tpManager), &(self->priv.minTorque), "minimum torque");
 	
     /* run drivetrain damper */
-    self->priv.torqueFromDtdamper = ikConLoop_step(&(self->priv.dtdamper), 0.0, self->in.generatorSpeed, -(self->in.externalMaximumTorque), self->in.externalMaximumTorque);
+    self->priv.torqueFromDtdamper = ikConLoop_step(&(self->priv.dtdamper), 0.0, self->priv.generatorSpeedEquivalent, -(self->in.externalMaximumTorque), self->in.externalMaximumTorque);
 
     /* run torque control */
-    self->priv.torqueFromTorqueCon = ikConLoop_step(&(self->priv.torquecon), self->in.maximumSpeed, self->in.generatorSpeed, self->priv.minTorque, self->priv.maxTorque);
+    self->priv.torqueFromTorqueCon = ikConLoop_step(&(self->priv.torquecon), self->in.maximumSpeed, self->priv.generatorSpeedEquivalent, self->priv.minTorque, self->priv.maxTorque);
 
     /* calculate torque demand */
     self->out.torqueDemand = self->priv.torqueFromDtdamper + self->priv.torqueFromTorqueCon;
 
     /* run collective pitch control */
-    self->priv.collectivePitchDemand = ikConLoop_step(&(self->priv.colpitchcon), self->in.maximumSpeed, self->in.generatorSpeed, self->priv.minPitch, self->priv.maxPitch);
+    self->priv.collectivePitchDemand = ikConLoop_step(&(self->priv.colpitchcon), self->in.maximumSpeed, self->priv.generatorSpeedEquivalent, self->priv.minPitch, self->priv.maxPitch);
+
+	/* run yaw by ipc */
+	self->priv.individualPitchForYaw = ikConLoop_step(&(self->priv.yawByIpc), self->in.yawErrorReference, self->in.yawError, -self->in.maximumIndividualPitch, self->in.maximumIndividualPitch);
+
+	/* run individual pitch control */
+	self->priv.ipc.in.azimuth = self->in.azimuth;
+	self->priv.ipc.in.collectivePitch = self->priv.collectivePitchDemand;
+	self->priv.ipc.in.maximumPitch = self->priv.maxPitch;
+	self->priv.ipc.in.minimumPitch = self->priv.minPitch;
+	for (i = 0; i < 3; i++)	{
+		self->priv.ipc.in.bladeRootMoments[i] = self->in.bladeRootMoments[i];
+	}
+	self->priv.ipc.in.demandedMy = 0.0;
+	self->priv.ipc.in.demandedMz = 0.0;
+	self->priv.ipc.in.maximumIndividualPitch = self->in.maximumIndividualPitch;
+	self->priv.ipc.in.externalPitchY = self->priv.individualPitchForYaw;
+	self->priv.ipc.in.externalPitchZ = 0.0;
+	ikIpc_step(&(self->priv.ipc));
     
     /* run IPC */
-    self->out.pitchDemandBlade1 = self->priv.collectivePitchDemand;
-    self->out.pitchDemandBlade2 = self->priv.collectivePitchDemand;
-    self->out.pitchDemandBlade3 = self->priv.collectivePitchDemand;
+    self->out.pitchDemandBlade1 = self->priv.ipc.out.pitch[0];
+    self->out.pitchDemandBlade2 = self->priv.ipc.out.pitch[1];
+    self->out.pitchDemandBlade3 = self->priv.ipc.out.pitch[2];
 
     return self->priv.tpManState;
 }
@@ -144,6 +176,14 @@ int ikClwindconWTCon_getOutput(const ikClwindconWTCon *self, double *output, con
         *output = self->priv.minPitchFromPowman;
         return 0;
     }
+    if (!strcmp(name, "individual pitch for yaw")) {
+        *output = self->priv.individualPitchForYaw;
+        return 0;
+    }
+    if (!strcmp(name, "generator speed equivalent")) {
+        *output = self->priv.generatorSpeedEquivalent;
+        return 0;
+    }
 
     /* pick up the block names */
     sep = strstr(name, ">");
@@ -170,6 +210,21 @@ int ikClwindconWTCon_getOutput(const ikClwindconWTCon *self, double *output, con
     }
 	if (!strncmp(name, "collective pitch control", strlen(name) - strlen(sep))) {
         err = ikConLoop_getOutput(&(self->priv.colpitchcon), output, sep + 1);
+        if (err) return -1;
+        else return 0;
+    }
+	if (!strncmp(name, "individual pitch control", strlen(name) - strlen(sep))) {
+        err = ikIpc_getOutput(&(self->priv.ipc), output, sep + 1);
+        if (err) return -1;
+        else return 0;
+    }
+	if (!strncmp(name, "yaw by ipc", strlen(name) - strlen(sep))) {
+        err = ikConLoop_getOutput(&(self->priv.yawByIpc), output, sep + 1);
+        if (err) return -1;
+        else return 0;
+    }
+	if (!strncmp(name, "speed sensor manager", strlen(name) - strlen(sep))) {
+        err = ikSpdman_getOutput(&(self->priv.speedSensorManager), output, sep + 1);
         if (err) return -1;
         else return 0;
     }
