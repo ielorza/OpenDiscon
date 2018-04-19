@@ -51,7 +51,7 @@ void ikGeneratorSpeedSingalFail(ikClwindconWTConInputs *in) {
 	*/
 	/*! [Speed sensor fault] */
 	
-	if (0 < N && _n < N) {
+	if (0 >= N || _n < N) {
 		_n++;
 		return;
 	}
