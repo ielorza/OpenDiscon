@@ -32,7 +32,16 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	const double deratingRatio = 0.2; /* later to be got via the supercontroller interface */
 		
 	if (NINT(DATA[0]) == 0) {
-		const double T = DATA[2];
+    		/*
+		####################################################################
+                    	 	Sampling interval
+				
+   		 Set sampling interval here:
+		*/
+		const double T = DATA[2];/* [s] */
+   		 /*
+   		 ####################################################################
+		*/
 		ikClwindconWTConParams param;
 		ikClwindconWTCon_initParams(&param);
 		setParams(&param,T);
