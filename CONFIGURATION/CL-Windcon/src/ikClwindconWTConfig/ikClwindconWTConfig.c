@@ -25,16 +25,14 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 #include "ikClwindconWTConfig.h"
 
-void setParams(ikClwindconWTConParams *param) {
+void setParams(ikClwindconWTConParams *param, double T) {
 	/*! [Sampling interval] */
     /*
 	####################################################################
                      Sampling interval
 
-    Set sampling interval here:
-	*/
-	const double T = 0.01; /* [s] */
-    /*
+    Set sampling interval in discon.c
+
     ####################################################################
 	*/
 	/*! [Sampling interval] */
