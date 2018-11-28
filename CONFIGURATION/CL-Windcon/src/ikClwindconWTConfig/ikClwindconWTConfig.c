@@ -25,8 +25,17 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 #include "ikClwindconWTConfig.h"
 
-void setParams(ikClwindconWTConParams *param) {
-	double T = 0.01;
+void setParams(ikClwindconWTConParams *param, double T) {
+	/*! [Sampling interval] */
+    /*
+	####################################################################
+                     Sampling interval
+
+    Set sampling interval in discon.c
+
+    ####################################################################
+	*/
+	/*! [Sampling interval] */
 
 	ikTuneDrivetrainDamper(&(param->drivetrainDamper), T);
 	ikTuneSpeedRange(&(param->torqueControl));
@@ -40,12 +49,18 @@ void setParams(ikClwindconWTConParams *param) {
 	ikTuneTorqueLowpassFilter(&(param->torqueControl), T);
 	ikTuneTorqueNotches(&(param->torqueControl), T);
 	ikTuneTorquePI(&(param->torqueControl), T);
+	ikConfigureRotorForIpc(&(param->individualPitchControl));
+	ikTuneIpcMyPI(&(param->individualPitchControl.controlMy), T);
+	ikTuneIpcMzPI(&(param->individualPitchControl.controlMz), T);
+	ikTuneYawByIpc(&(param->yawByIpc), T);
+	ikTuneYawByIpcLowpassFilter(&(param->yawByIpc), T);
+	ikConfigureSpeedManager(&(param->speedSensorManager), T);
 
 }
 
 void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
 
-	/*! [CL-Windcon drivetrain damper] */
+	/*! [Drivetrain damper] */
     /*
 	####################################################################
                      Drivetrain damper
@@ -58,13 +73,13 @@ void ikTuneDrivetrainDamper(ikConLoopParams *params, double T) {
 
     Set parameters here:
 	*/
-    double G = 0.0382; /* [kNm s^2/rad] 4 Nm s/rpm */
-    double d = 0.1; /* [-] */
-    double w = 21.1; /* [rad/s] */
+    const double G = 0.0382; /* [kNm s^2/rad] 4 Nm s/rpm */
+    const double d = 0.1; /* [-] */
+    const double w = 21.1; /* [rad/s] */
     /*
     ####################################################################
 	*/
-	/*! [CL-Windcon drivetrain damper] */
+	/*! [Drivetrain damper] */
 
 
     /*
@@ -228,8 +243,8 @@ void ikTunePitchLowpassFilter(ikConLoopParams *params, double T) {
 
     Set parameters here:
 	*/
-    double w = 5.6; /* [rad/s] */
-    double d = 0.5; /* [-] */
+    const double w = 5.6; /* [rad/s] */
+    const double d = 0.5; /* [-] */
     /*
     ####################################################################
 	*/
@@ -276,9 +291,9 @@ void ikTunePitchNotches(ikConLoopParams *params, double T) {
 
     Set parameters here:
 	*/
-    double w = 1.59; /* [rad/s] */
-    double dnum = 0.01; /* [-] */
-    double dden = 0.2; /* [-] */
+    const double w = 1.59; /* [rad/s] */
+    const double dnum = 0.01; /* [-] */
+    const double dden = 0.2; /* [-] */
     /*
     ####################################################################
 	*/
@@ -307,8 +322,8 @@ void ikTunePitchPI(ikConLoopParams *params, double T) {
 
     Set parameters here:
 	*/
-    double Kp = -0.3939; /* [degs/rad] 7.2e-4 rad/rpm */
-    double Ki = -0.1313; /* [deg/rad] 2.4e-4 rad/rpms */
+    const double Kp = -0.3939; /* [degs/rad] 7.2e-4 rad/rpm */
+    const double Ki = -0.1313; /* [deg/rad] 2.4e-4 rad/rpms */
     /*
     ####################################################################
 	*/
@@ -354,8 +369,8 @@ void ikTuneTorqueLowpassFilter(ikConLoopParams *params, double T) {
 
     Set parameters here:
 	*/
-    double w = 3.39; /* [rad/s] */
-    double d = 0.5; /* [-] */
+    const double w = 3.39; /* [rad/s] */
+    const double d = 0.5; /* [-] */
     /*
     ####################################################################
 	*/
@@ -402,9 +417,9 @@ void ikTuneTorqueNotches(ikConLoopParams *params, double T) {
 
     Set parameters here:
 	*/
-    double w = 1.59; /* [rad/s] */
-    double dnum = 0.01; /* [-] */
-    double dden = 0.2; /* [-] */
+    const double w = 1.59; /* [rad/s] */
+    const double dnum = 0.01; /* [-] */
+    const double dden = 0.2; /* [-] */
     /*
     ####################################################################
 	*/
@@ -433,13 +448,12 @@ void ikTuneTorquePI(ikConLoopParams *params, double T) {
 
     Set parameters here:
 	*/
-    double Kp = -34.3775; /* [kNms/rad] 3600 Nm/rpm */
-    double Ki = -11.4592; /* [kNm/rad] 1200 Nm/rpms */
+    const double Kp = -34.3775; /* [kNms/rad] 3600 Nm/rpm */
+    const double Ki = -11.4592; /* [kNm/rad] 1200 Nm/rpms */
     /*
     ####################################################################
 	*/
 	/*! [Torque PI] */
-
 
 	/*
 	tune the torque control to this tf:
@@ -464,4 +478,230 @@ void ikTuneTorquePI(ikConLoopParams *params, double T) {
     params->linearController.postGainTfs.tfParams[0].a[1] = -1.0;
     params->linearController.postGainTfs.tfParams[0].a[2] = 0.0;
 
+}
+
+void ikConfigureRotorForIpc(ikIpcParams *params) {
+
+	params->azimuthOffset = 0.0;
+	params->bladeOrder = 1;
+
+}
+
+void ikTuneIpcMyPI(ikConLoopParams *params, double T) {
+
+	/*! [IPC My PI] */
+    /*
+	####################################################################
+                    IPC My PI
+
+    Transfer function:
+
+    C(s) = (Kp*s + Ki)/s
+
+    The sampling time is given by function parameter T.
+
+    Set parameters here:
+	*/
+    const double Kp = 0.0; /* [deg/kNm] */
+    const double Ki = -0.1e-3; /* [deg/kNms] */
+    /*
+    ####################################################################
+	*/
+	/*! [IPC My PI] */
+
+	/*
+	tune the ipc My control to this tf:
+           (Kp + Ki*T/2)z - (Kp - Ki*T/2)
+    C(z) = ------------------------------
+                      z - 1
+	rad/s --> kNm
+	*/
+	params->linearController.errorTfs.tfParams[0].enable = 1;
+    params->linearController.errorTfs.tfParams[0].b[0] = (Kp + Ki*T/2);
+    params->linearController.errorTfs.tfParams[0].b[1] = -(Kp - Ki*T/2);
+    params->linearController.errorTfs.tfParams[0].b[2] = 0.0;
+    params->linearController.errorTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.errorTfs.tfParams[0].a[1] = 0.0;
+    params->linearController.errorTfs.tfParams[0].a[2] = 0.0;
+
+	params->linearController.postGainTfs.tfParams[0].enable = 1;
+    params->linearController.postGainTfs.tfParams[0].b[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].b[1] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].b[2] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].a[1] = -1.0;
+    params->linearController.postGainTfs.tfParams[0].a[2] = 0.0;
+
+}
+
+void ikTuneIpcMzPI(ikConLoopParams *params, double T) {
+
+	/*! [IPC Mz PI] */
+    /*
+	####################################################################
+                    IPC Mz PI
+
+    Transfer function:
+
+    C(s) = (Kp*s + Ki)/s
+
+    The sampling time is given by function parameter T.
+
+    Set parameters here:
+	*/
+    const double Kp = 0.0; /* [deg/kNm] */
+    const double Ki = -0.1e-3; /* [deg/kNms] */
+    /*
+    ####################################################################
+	*/
+	/*! [IPC Mz PI] */
+
+	/*
+	tune the ipc Mz control to this tf:
+           (Kp + Ki*T/2)z - (Kp - Ki*T/2)
+    C(z) = ------------------------------
+                      z - 1
+	rad/s --> kNm
+	*/
+	params->linearController.errorTfs.tfParams[0].enable = 1;
+    params->linearController.errorTfs.tfParams[0].b[0] = (Kp + Ki*T/2);
+    params->linearController.errorTfs.tfParams[0].b[1] = -(Kp - Ki*T/2);
+    params->linearController.errorTfs.tfParams[0].b[2] = 0.0;
+    params->linearController.errorTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.errorTfs.tfParams[0].a[1] = 0.0;
+    params->linearController.errorTfs.tfParams[0].a[2] = 0.0;
+
+	params->linearController.postGainTfs.tfParams[0].enable = 1;
+    params->linearController.postGainTfs.tfParams[0].b[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].b[1] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].b[2] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].a[1] = -1.0;
+    params->linearController.postGainTfs.tfParams[0].a[2] = 0.0;
+
+}
+
+void ikTuneYawByIpc(ikConLoopParams *params, double T) {
+/*
+This is an original implementation of the yaw by IPC strategy in 87e4a2fe8e8ac8fc51305a3f840e23a0deaf6caa of https://github.com/TUDelft-DataDrivenControl/DRC_Fortran
+*/
+
+	/*! [Yaw by IPC PI] */
+    /*
+	####################################################################
+                    Yaw by IPC PI
+
+    Transfer function:
+
+    C(s) = (Kp*s + Ki)/s
+
+    The sampling time is given by function parameter T.
+
+    Set parameters here:
+	*/
+    const double Kp = 0.0; /* [-] */
+    const double Ki = 0.0; /* [1/s] */
+    /*
+    ####################################################################
+	*/
+	/*! [Yaw by IPC PI] */
+
+	/*
+	tune the yaw by ipc control to this tf:
+           (Kp + Ki*T/2)z - (Kp - Ki*T/2)
+    C(z) = ------------------------------
+                      z - 1
+	deg --> deg
+	*/
+	params->linearController.errorTfs.tfParams[0].enable = 1;
+    params->linearController.errorTfs.tfParams[0].b[0] = (Kp + Ki*T/2);
+    params->linearController.errorTfs.tfParams[0].b[1] = -(Kp - Ki*T/2);
+    params->linearController.errorTfs.tfParams[0].b[2] = 0.0;
+    params->linearController.errorTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.errorTfs.tfParams[0].a[1] = 0.0;
+    params->linearController.errorTfs.tfParams[0].a[2] = 0.0;
+
+	params->linearController.postGainTfs.tfParams[0].enable = 1;
+    params->linearController.postGainTfs.tfParams[0].b[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].b[1] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].b[2] = 0.0;
+    params->linearController.postGainTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.postGainTfs.tfParams[0].a[1] = -1.0;
+    params->linearController.postGainTfs.tfParams[0].a[2] = 0.0;
+
+}
+
+void ikTuneYawByIpcLowpassFilter(ikConLoopParams *params, double T) {
+/*
+This is an original implementation of the yaw by IPC strategy in 87e4a2fe8e8ac8fc51305a3f840e23a0deaf6caa of https://github.com/TUDelft-DataDrivenControl/DRC_Fortran
+*/
+
+	/*! [Yaw by IPC lowpass filter] */
+    /*
+	####################################################################
+                    Yaw error feedback low pass filter
+
+    Transfer function:
+    H(s) = w^2 / (s^2 + 2*d*w*s + w^2)
+
+    The sampling time is given by function parameter T.
+
+	The default values have been kindly provided by TUDelft, who have calculated them to suit the DTU 10MW reference wind turbine from FP7 project INNWIND.
+    Set parameters here:
+	*/
+    const double w = 0.6283185; /* [rad/s] */
+    const double d = 1.0; /* [-] */
+    /*
+    ####################################################################
+	*/
+	/*! [Yaw by IPC lowpass filter] */
+
+    /*
+	tune the yaw by ipc control feedback filter to this tf:
+                   (0.5*T*w)^2                                                                     z^2 + 2z + 1
+    H(z) =  -----------------------------   ------------------------------------------------------------------------------------------------------------------------
+            1 + T*d*w +  (0.5*T*w)^2    z^2 - 2*(1 - (0.5*T*w)^2) / (1 + T*d*w +  (0.5*T*w)^2)z +  (1 - T*d*w +  (0.5*T*w)^2) / (1 + T*d*w +  (0.5*T*w)^2)
+	*/
+    params->linearController.measurementTfs.tfParams[0].enable = 1;
+    params->linearController.measurementTfs.tfParams[0].b[0] = 1.0;
+    params->linearController.measurementTfs.tfParams[0].b[1] = 2.0;
+    params->linearController.measurementTfs.tfParams[0].b[2] = 1.0;
+    params->linearController.measurementTfs.tfParams[0].a[0] = 1.0;
+    params->linearController.measurementTfs.tfParams[0].a[1] = -2 * (1 - (0.5*T*w)*(0.5*T*w)) / (1 + T*d*w + (0.5*T*w)*(0.5*T*w));
+    params->linearController.measurementTfs.tfParams[0].a[2] = (1 - T*d*w + (0.5*T*w)*(0.5*T*w)) / (1 + T*d*w + (0.5*T*w)*(0.5*T*w));
+
+    params->linearController.measurementTfs.tfParams[1].enable = 1;
+    params->linearController.measurementTfs.tfParams[1].b[0] = (0.5*T*w)*(0.5*T*w) / (1 + T*d*w + (0.5*T*w)*(0.5*T*w));
+
+}
+
+void ikConfigureSpeedManager(ikSpdmanParams *params, double T) {
+	
+	/*! [Speed sensor manager] */
+	/*
+	####################################################################
+	                    Speed sensor management
+
+	Differences between the generator speed, rotor speed and azimuth derivative
+	(the latter two multiplied by the gearbox ratio) are considered a fault if
+	they are larger than tol for longer than N sampling intervals T.
+
+	Set parameters here:
+	*/
+	const int N = 10; /* [-] */
+	const double tol = 1.0; /* [rad/s] */
+	const double gbRatio = 50.0; /* [-] */
+    /*
+    ####################################################################
+	*/
+	/*! [Speed sensor manager] */
+
+	params->diagnoser.nStepsToFault = N;
+	params->diagnoser.tolerance = tol;
+	
+	params->gearboxRatio = gbRatio;
+	params->T = T;
+	params->minAzimuth = 0.0;
+	params->maxAzimuth = 360.0;
+	
 }

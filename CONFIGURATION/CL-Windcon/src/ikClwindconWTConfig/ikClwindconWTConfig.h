@@ -32,7 +32,7 @@ extern "C" {
 
 #include "ikClwindconWTCon.h"  
 
-	void setParams(ikClwindconWTConParams *param);
+	void setParams(ikClwindconWTConParams *param, double T);
 	
 	void ikTuneDrivetrainDamper(ikConLoopParams *params, double T);
 	
@@ -57,6 +57,18 @@ extern "C" {
 	void ikTuneTorquePI(ikConLoopParams *params, double T);
 
 	void ikTunePitchPIGainSchedule(ikConLoopParams *params);
+
+	void ikConfigureRotorForIpc(ikIpcParams *params);
+
+	void ikTuneIpcMyPI(ikConLoopParams *params, double T);
+
+	void ikTuneIpcMzPI(ikConLoopParams *params, double T);
+
+	void ikTuneYawByIpc(ikConLoopParams *params, double T);
+
+	void ikTuneYawByIpcLowpassFilter(ikConLoopParams *params, double T);
+
+	void ikConfigureSpeedManager(ikSpdmanParams *params, double T);
 
 #ifdef __cplusplus
 }
