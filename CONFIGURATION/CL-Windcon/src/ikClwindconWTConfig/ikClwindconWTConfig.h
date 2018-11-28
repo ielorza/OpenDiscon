@@ -32,7 +32,7 @@ extern "C" {
 
 #include "ikClwindconWTCon.h"  
 
-	void setParams(ikClwindconWTConParams *param);
+	void setParams(ikClwindconWTConParams *param, double T);
 	
 	void ikTuneDrivetrainDamper(ikConLoopParams *params, double T);
 	
