@@ -29,7 +29,7 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	static ikClwindconWTCon con;
 	double output = -12.0;
 	static FILE *f = NULL;
-	const double deratingRatio = 0.5; /* later to be got via the supercontroller interface */
+	const double deratingRatio = 2e6; /* later to be got via the supercontroller interface */
 		
 	if (NINT(DATA[0]) == 0) {
 		ikClwindconWTConParams param;
@@ -92,5 +92,7 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 	err = ikClwindconWTCon_getOutput(&con, &output, "speed sensor manager>signal 2");
 	fwrite(&(output), 1, sizeof(output), f);
 	err = ikClwindconWTCon_getOutput(&con, &output, "speed sensor manager>signal 3");
+	fwrite(&(output), 1, sizeof(output), f);
+	err = ikClwindconWTCon_getOutput(&con, &output, "minimum pitch from power manager");
 	fwrite(&(output), 1, sizeof(output), f);
 }	
