@@ -77,13 +77,13 @@ double ikPowman_step(ikPowman *self, double deratingRatio, double maxSpeed, doub
 	self->measuredSpeed = measuredSpeed;
 	
 	/* calculate maximum torque */	
-	self->maximumTorque = (self->ratedPower-deratingRatio*1e-3)/maxSpeed/self->efficiency;
+	self->maximumTorque = (self->ratedPower-deratingRatio*1e-3)/measuredSpeed/self->efficiency;
 	
 	/* calculate below rated torque */
 	self->belowRatedTorque = ikLutbl_eval(&(self->lutblKopt), deratingRatio*2.0*50*50*50/1.225/3.1416/89.2/89.2/89.2/89.2/89.2/measuredSpeed/measuredSpeed/measuredSpeed)*measuredSpeed*measuredSpeed;
 	
 	/* calculate minimum pitch */
-	self->minimumPitch = ikLutbl_eval(&(self->lutblPitch), deratingRatio*2.0*50*50*50/1.225/3.1416/89.2/89.2/89.2/89.2/89.2/measuredSpeed/measuredSpeed/measuredSpeed);
+	self->minimumPitch = -5.0;
 	
 	/* return the maximum torque */
 	return self->maximumTorque;
