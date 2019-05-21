@@ -98,7 +98,7 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
 		mpft = ikLutbl_eval(&t_mpft, con.out.torqueDemand)/3.1416*180.0; /* deg */
 
 		con.in.deratingRatio = deratingRatio;
-		con.in.externalMaximumTorque = 230.0; /* kNm */
+		con.in.externalMaximumTorque = 198.9437; /* kNm */
 		con.in.externalMinimumTorque = 0.0; /* kNm */
 		con.in.externalMaximumPitch = 90.0; /* deg */
 		con.in.externalMinimumPitch = mpfs > mpft ? mpfs : mpft; /* deg */
