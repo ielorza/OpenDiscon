@@ -215,9 +215,9 @@ void ikTunePitchPIGainSchedule(ikConLoopParams *params) {
 
 	Set parameters here:
 	*/
-	const int n = 10; /* number of points in the lookup table */
-	const double pitch[] = {0.0, 3.8424, 5.6505, 8.1091, 11.6797, 14.5687, 17.1140, 19.4472, 21.6249, 23.6774}; /* degrees */
-	const double gain[] = {2.1000, 2.1000, 2.0727, 1.7182, 1.5182, 1.3545, 1.2636, 1.1909, 1.1182, 1.0545}; /* - */
+	const int n = 11; /* number of points in the lookup table */
+	const double pitch[] = {0.0, 3.8424, 5.6505, 8.1091, 11.6797, 14.5687, 17.1140, 19.4472, 21.6249, 23.6774, 25.0}; /* degrees */
+	const double gain[] = {2.1000, 2.1000, 2.0727, 1.7182, 1.5182, 1.3545, 1.2636, 1.1909, 1.1182, 1.0545, 1.0545}; /* - */
 	/*
     ####################################################################
 	*/
