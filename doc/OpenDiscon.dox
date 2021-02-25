@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2017 IK4-IKERLAN
+Copyright (C) 2017, 2021 IKERLAN
 
 This file is part of OpenDiscon.
  
@@ -31,6 +31,7 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 * To make the above happen, run <a href="https://cmake.org/">CMake</a> on the OpenDiscon directory.
 * Two options are available:
 * - CONFIGURATION
+*  - simple: a simple wind turbine controller, initially tuned for the DTU 10MW Reference Turbine (see CL-Windcon for details on how to tune it for some other turbine)
 *  - CL-Windcon: a controller for @ref clwindcon
 * - DISTRIBUTION
 *  - DISCON: an implementation of the legacy GHBladed DISCON interface, which is also used by other wind turbine simulation software packages such as FAST.
@@ -40,7 +41,7 @@ along with OpenDiscon. If not, see <http://www.gnu.org/licenses/>.
 
 /** @page license License
 * 
-* Copyright (C) 2017 IK4-IKERLAN
+* Copyright (C) 2017, 2021 IKERLAN
 * 
 * OpenDiscon is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by

@@ -6,9 +6,10 @@ Currently available distributions are for:
 - Level-2 MATLAB S-Function for Simulink.
 
 Currently available configurations are for:
+- Simple (tuned for the DTU 10MW model)
 - CL-Windcon (DTU 10MW model).
 
-This uses [IK4-IKERLAN](http://www.ikerlan.es/en/)'s library OpenWitcon, included as a submodule.
+This uses [IKERLAN](http://www.ikerlan.es/en/)'s library OpenWitcon, included as a submodule.
 Documentation is provided in Doxygen format. To generate it, run Doxygen on ./doc/Doxyfile.
 
 For compilation, run cmake here.

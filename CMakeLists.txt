@@ -5,6 +5,7 @@ project (OpenDiscon)
 set( CONFIGURATION "CL-Windcon" CACHE STRING
 "Choose a configuration.\n\
 Available configurations are:\n\
+simple\n\
 CL-Windcon" )
 
 # run configuration-specific cmake script
