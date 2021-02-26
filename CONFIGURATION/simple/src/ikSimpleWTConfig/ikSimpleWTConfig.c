@@ -285,9 +285,29 @@ void ikTunePitchNotches(ikConLoopParams *params, double T) {
 
       Set parameters here:
     */
-    const double w = 1.59; /* [rad/s] */
-    const double dnum = 0.01; /* [-] */
-    const double dden = 0.2; /* [-] */
+    const double wfa = 1.59; /* [rad/s] */
+    const double dnumfa = 0.01; /* [-] */
+    const double ddenfa = 0.2; /* [-] */
+    /*
+      ####################################################################
+    */
+    /*! [1st fore-aft tower mode filter] */
+
+    /*! [3p filter] */
+    /*
+      ####################################################################
+      3p filter
+
+      Transfer function:
+      H(s) = (s^2 + 2*dnum*w*s + w^2) / (s^2 + 2*dden*w*s + w^2)
+
+      The sampling time is given by function parameter T.
+
+      Set parameters here:
+    */
+    const double w3p = 3.016; /* [rad/s] */
+    const double dnum3p = 0.01; /* [-] */
+    const double dden3p = 0.2; /* [-] */
     /*
       ####################################################################
     */
@@ -295,9 +315,14 @@ void ikTunePitchNotches(ikConLoopParams *params, double T) {
 
     params->linearController.measurementNotches.dT = T;
     params->linearController.measurementNotches.notchParams[0].enable = 1;
-    params->linearController.measurementNotches.notchParams[0].freq = w;
-    params->linearController.measurementNotches.notchParams[0].dampNum = dnum;
-    params->linearController.measurementNotches.notchParams[0].dampDen = dden;
+    params->linearController.measurementNotches.notchParams[0].freq = wfa;
+    params->linearController.measurementNotches.notchParams[0].dampNum = dnumfa;
+    params->linearController.measurementNotches.notchParams[0].dampDen = ddenfa;
+
+    params->linearController.measurementNotches.notchParams[1].enable = 1;
+    params->linearController.measurementNotches.notchParams[1].freq = w3p;
+    params->linearController.measurementNotches.notchParams[1].dampNum = dnum3p;
+    params->linearController.measurementNotches.notchParams[1].dampDen = dden3p;
 
 }
 
