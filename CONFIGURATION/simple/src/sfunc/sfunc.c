@@ -480,8 +480,10 @@ static void mdlInitializeSizes(SimStruct *S)
      * 1 - minimum torque [kNm]
      * 2 - maximum pitch [deg]
      * 3 - minimum pitch [deg]
-     * 4 - generator speed [rad/s]
-     * 5 - maximum speed [rad/s]
+     * 4 - maximum pitch rate [deg/s]
+     * 5 - minimum pitch rate [deg/s]
+     * 6 - maximum speed [rad/s]
+     * 7 - generator speed [rad/s]
      *
      * outputs are:
      * 0 - generator torque demand [kNm]
@@ -489,7 +491,7 @@ static void mdlInitializeSizes(SimStruct *S)
      * 2 - blade 2 pitch demand [deg]
      * 3 - blade 3 pitch demand [deg]
      */
-    int_T nInputPorts  = 6;  /* number of input ports  */
+    int_T nInputPorts  = 8;  /* number of input ports  */
     int_T nOutputPorts = 4;  /* number of output ports */
     int_T needsInput   = 1;  /* direct feed through    */
 
@@ -1248,8 +1250,10 @@ static void mdlUpdate(SimStruct *S, int_T tid)
     con->in.externalMinimumTorque = **(ssGetInputPortRealSignalPtrs(S,1)); /* kNm */
     con->in.externalMaximumPitch = **(ssGetInputPortRealSignalPtrs(S,2)); /* deg */
     con->in.externalMinimumPitch = **(ssGetInputPortRealSignalPtrs(S,3)); /* deg */
-    con->in.generatorSpeed = **(ssGetInputPortRealSignalPtrs(S,4)); /* rad/s */
-    con->in.maximumSpeed = **(ssGetInputPortRealSignalPtrs(S,5)); /* rpm to rad/s */
+    con->in.externalMaximumPitchRate = **(ssGetInputPortRealSignalPtrs(S,4)); /* deg/s */
+    con->in.externalMinimumPitchRate = **(ssGetInputPortRealSignalPtrs(S,5)); /* deg/s */
+    con->in.maximumSpeed = **(ssGetInputPortRealSignalPtrs(S,6)); /* rad/s */
+    con->in.generatorSpeed = **(ssGetInputPortRealSignalPtrs(S,7)); /* rad/s */
         
     ikSimpleWTCon_step(con);
         

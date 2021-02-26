@@ -19,10 +19,8 @@
 
 #define NINT(a) ((a) >= 0.0 ? (int) ((a)+0.5) : ((a)-0.5))
 
-#include "ikSimpleInputMod.h"
 #include "ikSimpleWTConfig.h"
 #include "OpenDiscon_EXPORT.h"
-#include <stdio.h>
 
 void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const char *OUTNAME, char *MESSAGE) {
     int err;
@@ -39,6 +37,8 @@ void OpenDiscon_EXPORT DISCON(float *DATA, int FLAG, const char *INFILE, const c
     con.in.externalMinimumTorque = 0.0; /* kNm */
     con.in.externalMaximumPitch = 90.0; /* deg */
     con.in.externalMinimumPitch = 0.0; /* deg */
+    con.in.externalMaximumPitchRate = 2.5; /* deg/s */
+    con.in.externalMinimumPitchRate = -2.5; /* deg/s */
     con.in.generatorSpeed = (double) DATA[19]; /* rad/s */
     con.in.maximumSpeed = 480.0/30*3.1416; /* rpm to rad/s */
         

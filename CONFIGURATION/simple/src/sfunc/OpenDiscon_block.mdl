@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.10"
+    ComputedModelVersion    "1.11"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -75,10 +75,10 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [746.0, 448.0]
+	  Extents		  [746.0, 471.0]
 	  ZoomFactor		  [1.0]
-	  Offset		  [-18.600000000000136, 77.6500011026859]
-	  SceneRectInView	  [-18.600000000000136, 77.6500011026859, 746.0, 448.0]
+	  Offset		  [-18.600000000000136, 75.0]
+	  SceneRectInView	  [-18.600000000000136, 75.0, 746.0, 471.0]
 	}
 	Object {
 	  $ObjectID		  6
@@ -86,10 +86,10 @@ Model {
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "2"
-	  Extents		  [746.0, 448.0]
+	  Extents		  [746.0, 471.0]
 	  ZoomFactor		  [1.0]
-	  Offset		  [-140.9296875, -29.0]
-	  SceneRectInView	  [-140.9296875, -29.0, 746.0, 448.0]
+	  Offset		  [-140.9296875, -40.5]
+	  SceneRectInView	  [-140.9296875, -40.5, 746.0, 471.0]
 	}
 	PropName		"EditorsInfo"
       }
@@ -112,7 +112,7 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABjAP///wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAABrAD///8AAAMQAAAB/QAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAB/////wEAAAAA/////wAAAAAAAAAA"
+      "QBjAHQAbwByAAAAAAD/////AAABrAD///8AAAMQAAACFAAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAA"
       Array {
 	Type			"Cell"
 	Dimension		0
@@ -129,9 +129,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "matlabktm1"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Feb 25 15:04:14 2021"
-  RTWModifiedTimeStamp	  536166243
-  ModelVersionFormat	  "1.%<AutoIncrement:10>"
+  LastModifiedDate	  "Fri Feb 26 07:42:03 2021"
+  RTWModifiedTimeStamp	  536226120
+  ModelVersionFormat	  "1.%<AutoIncrement:11>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1159,14 +1159,14 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "18"
+    SIDHighWatermark	    "20"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      SubSystem
       Name		      "OpenDiscon"
       SID		      "2"
-      Ports		      [6, 4]
-      Position		      [105, 103, 440, 502]
+      Ports		      [8, 4]
+      Position		      [105, 105, 440, 505]
       ZOrder		      2
       RequestExecContextInheritance off
       System {
@@ -1192,14 +1192,14 @@ Model {
 	  BlockType		  Inport
 	  Name			  "maximum torque [kNm]"
 	  SID			  "3"
-	  Position		  [20, 38, 50, 52]
+	  Position		  [20, 33, 50, 47]
 	  ZOrder		  2
 	}
 	Block {
 	  BlockType		  Inport
 	  Name			  "minimum torque [kNm]"
 	  SID			  "4"
-	  Position		  [20, 98, 50, 112]
+	  Position		  [20, 78, 50, 92]
 	  ZOrder		  3
 	  Port			  "2"
 	}
@@ -1207,7 +1207,7 @@ Model {
 	  BlockType		  Inport
 	  Name			  "maximum pitch [deg]"
 	  SID			  "5"
-	  Position		  [20, 158, 50, 172]
+	  Position		  [20, 123, 50, 137]
 	  ZOrder		  4
 	  Port			  "3"
 	}
@@ -1215,32 +1215,48 @@ Model {
 	  BlockType		  Inport
 	  Name			  "minimum pitch [deg]"
 	  SID			  "6"
-	  Position		  [20, 218, 50, 232]
+	  Position		  [20, 168, 50, 182]
 	  ZOrder		  5
 	  Port			  "4"
 	}
 	Block {
 	  BlockType		  Inport
-	  Name			  "generator speed [rad/s]"
-	  SID			  "7"
-	  Position		  [20, 278, 50, 292]
-	  ZOrder		  6
+	  Name			  "maximum pitch rate [deg/s]"
+	  SID			  "20"
+	  Position		  [20, 213, 50, 227]
+	  ZOrder		  19
 	  Port			  "5"
+	}
+	Block {
+	  BlockType		  Inport
+	  Name			  "minimum pitch rate [deg/s]"
+	  SID			  "19"
+	  Position		  [20, 258, 50, 272]
+	  ZOrder		  18
+	  Port			  "6"
 	}
 	Block {
 	  BlockType		  Inport
 	  Name			  "maximum speed [rad/s]"
 	  SID			  "18"
-	  Position		  [20, 338, 50, 352]
+	  Position		  [20, 303, 50, 317]
 	  ZOrder		  17
-	  Port			  "6"
+	  Port			  "7"
+	}
+	Block {
+	  BlockType		  Inport
+	  Name			  "generator speed [rad/s]"
+	  SID			  "7"
+	  Position		  [20, 348, 50, 362]
+	  ZOrder		  6
+	  Port			  "8"
 	}
 	Block {
 	  BlockType		  S-Function
 	  Name			  "S-Function"
 	  SID			  "1"
-	  Ports			  [6, 4]
-	  Position		  [165, 20, 305, 370]
+	  Ports			  [8, 4]
+	  Position		  [165, 22, 305, 373]
 	  ZOrder		  1
 	  FunctionName		  "OpenDiscon"
 	  SFunctionDeploymentMode off
@@ -1300,13 +1316,6 @@ Model {
 	  DstPort		  4
 	}
 	Line {
-	  ZOrder		  19
-	  SrcBlock		  "generator speed [rad/s]"
-	  SrcPort		  1
-	  DstBlock		  "S-Function"
-	  DstPort		  5
-	}
-	Line {
 	  ZOrder		  16
 	  SrcBlock		  "minimum torque [kNm]"
 	  SrcPort		  1
@@ -1342,11 +1351,32 @@ Model {
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  37
-	  SrcBlock		  "maximum speed [rad/s]"
+	  ZOrder		  40
+	  SrcBlock		  "minimum pitch rate [deg/s]"
 	  SrcPort		  1
 	  DstBlock		  "S-Function"
 	  DstPort		  6
+	}
+	Line {
+	  ZOrder		  41
+	  SrcBlock		  "maximum pitch rate [deg/s]"
+	  SrcPort		  1
+	  DstBlock		  "S-Function"
+	  DstPort		  5
+	}
+	Line {
+	  ZOrder		  42
+	  SrcBlock		  "maximum speed [rad/s]"
+	  SrcPort		  1
+	  DstBlock		  "S-Function"
+	  DstPort		  7
+	}
+	Line {
+	  ZOrder		  43
+	  SrcBlock		  "generator speed [rad/s]"
+	  SrcPort		  1
+	  DstBlock		  "S-Function"
+	  DstPort		  8
 	}
       }
     }

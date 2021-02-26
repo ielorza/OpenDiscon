@@ -34,6 +34,10 @@ int ikSimpleWTCon_init(ikSimpleWTCon *self, const ikSimpleWTConParams *params) {
     /* pass reference to collective pitch demand for use in gain scheduling */
     params_.collectivePitchControl.linearController.gainShedXVal = &(self->out.pitchDemand);
 
+    /* pass references to external pitch rate limits for use in collective pitch controller */
+    params_.collectivePitchControl.linearController.maxPostGainValue = &(self->in.externalMaximumPitchRate);
+    params_.collectivePitchControl.linearController.minPostGainValue = &(self->in.externalMinimumPitchRate);
+
     /* pass reference to preferred torque for use in torque control */
     params_.torqueControl.setpointGenerator.preferredControlAction = &(self->priv.belowRatedTorque);
 

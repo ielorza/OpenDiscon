@@ -43,6 +43,8 @@ extern "C" {
         double externalMinimumTorque; /**<external minimum torque in kNm*/
         double externalMaximumPitch; /**<external maximum pitch in degrees*/
         double externalMinimumPitch; /**<external minimum pitch in degrees*/
+        double externalMaximumPitchRate; /**<external maximum pitch rate in degrees per second*/
+        double externalMinimumPitchRate; /**<external minimum pitch rate in degrees per second*/
         double maximumSpeed; /**<maximum generator speed setpoing in rad/s*/
         double generatorSpeed; /**<generator speed in rad/s*/
     } ikSimpleWTConInputs;
@@ -89,6 +91,8 @@ extern "C" {
      * @li external minimum torque: externally set lower torque limit, in kNm, specify via @link ikSimpleWTConInputs.externalMinimumTorque @endlink at @link in @endlink
      * @li external maximum pitch: externally set upper pitch limit, in degrees, specify via @link ikSimpleWTConInputs.externalMaximumPitch @endlink at @link in @endlink
      * @li external minimum pitch: externally set lower pitch limit, in degrees, specify via @link ikSimpleWTConInputs.externalMinimumPitch @endlink at @link in @endlink
+     * @li external maximum pitch rate: externally set upper pitch rate limit, in degrees per second, specify via @link ikSimpleWTConInputs.externalMaximumPitchRate @endlink at @link in @endlink
+     * @li external minimum pitch rate: externally set lower pitch rate limit, in degrees per second, specify via @link ikSimpleWTConInputs.externalMinimumPitchRate @endlink at @link in @endlink
      * @li maximum speed: maximum generator speed setpoint, in rad/s, specify via @link ikSimpleWTConInputs.maximumSpeed @endlink at @link in @endlink
      * @li generator speed: current generator speed, in rad/s, specify via @link ikSimpleWTConInputs.generatorSpeed @endlink at @link in @endlink
      * 
