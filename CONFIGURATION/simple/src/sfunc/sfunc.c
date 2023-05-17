@@ -1230,20 +1230,6 @@ static void mdlZeroCrossings(SimStruct *S)
  */
 static void mdlOutputs(SimStruct *S, int_T tid)
 {
-} /* end mdlOutputs */
-
-
-#define MDL_UPDATE  /* Change to #undef to remove function */
-#if defined(MDL_UPDATE)
-/* Function: mdlUpdate ======================================================
- * Abstract:
- *    This function is called once for every major integration time step.
- *    Discrete states are typically updated here, but this function is useful
- *    for performing any tasks that should only take place once per
- *    integration step.
- */
-static void mdlUpdate(SimStruct *S, int_T tid)
-{
     ikSimpleWTCon *con = (ikSimpleWTCon*) ssGetPWorkValue(S, 0);
 
     con->in.externalMaximumTorque =**(ssGetInputPortRealSignalPtrs(S,0)); /* kNm */
@@ -1261,6 +1247,20 @@ static void mdlUpdate(SimStruct *S, int_T tid)
     *(ssGetOutputPortRealSignal(S,1)) = con->out.pitchDemand; /* deg */
     *(ssGetOutputPortRealSignal(S,2)) = con->out.pitchDemand; /* deg */
     *(ssGetOutputPortRealSignal(S,3)) = con->out.pitchDemand; /* deg */
+} /* end mdlOutputs */
+
+
+#define MDL_UPDATE  /* Change to #undef to remove function */
+#if defined(MDL_UPDATE)
+/* Function: mdlUpdate ======================================================
+ * Abstract:
+ *    This function is called once for every major integration time step.
+ *    Discrete states are typically updated here, but this function is useful
+ *    for performing any tasks that should only take place once per
+ *    integration step.
+ */
+static void mdlUpdate(SimStruct *S, int_T tid)
+{
 }
 #endif /* MDL_UPDATE */
 
