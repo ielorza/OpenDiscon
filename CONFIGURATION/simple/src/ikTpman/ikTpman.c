@@ -34,6 +34,9 @@ int ikTpman_init(ikTpman *self, const ikTpmanParams *params) {
     /* set state to 0 */
     self->state = 0;
 
+    /* set to first time */
+    self->first = 1;
+
     return 0;
 }
 
@@ -41,18 +44,21 @@ void ikTpman_initParams(ikTpmanParams *params) {
 }
 
 int ikTpman_step(ikTpman *self, double torque, double maxTorque, double minTorqueExt, double pitch, double maxPitchExt, double minPitchExt) {
-    /* save inputs */
-    self->maxPitchExt = maxPitchExt;
-    self->minPitchExt = minPitchExt;
-    self->torque = torque;
-    self->pitch = pitch;
-    self->minTorqueExt = minTorqueExt;
-    self->maxTorque = maxTorque;
+    /* init inputs the first time */
+    if (self->first) {
+        self->maxPitchExt = maxPitchExt;
+        self->minPitchExt = minPitchExt;
+        self->torque = torque;
+        self->pitch = pitch;
+        self->minTorqueExt = minTorqueExt;
+        self->maxTorque = maxTorque;
+        self->first = 0;
+    }
 
     /* transition between states if necessary */
     switch (self->state) {
     case 0:
-        if ((torque >= maxTorque) || (pitch > self->minPitchExt)) self->state = 1;
+        if ((torque >= self->maxTorque) || (pitch > self->minPitchExt)) self->state = 1;
         break;
     case 1:
         if (pitch <= self->minPitchExt) self->state = 0;
@@ -64,7 +70,7 @@ int ikTpman_step(ikTpman *self, double torque, double maxTorque, double minTorqu
     case 0:
         self->maxPitch = pitch;
         self->maxPitch = self->maxPitch < maxPitchExt ? self->maxPitch : maxPitchExt;
-        self->maxPitch = self->maxPitch > self->minPitchExt ? self->maxPitch : self->minPitchExt;
+        self->maxPitch = self->maxPitch > minPitchExt ? self->maxPitch : minPitchExt;
         self->minTorque = minTorqueExt;
         break;
     case 1:
@@ -74,6 +80,14 @@ int ikTpman_step(ikTpman *self, double torque, double maxTorque, double minTorqu
         self->minTorque = self->minTorque > minTorqueExt ? self->minTorque : minTorqueExt;
         break;
     }
+
+    /* save inputs */
+    self->maxPitchExt = maxPitchExt;
+    self->minPitchExt = minPitchExt;
+    self->torque = torque;
+    self->pitch = pitch;
+    self->minTorqueExt = minTorqueExt;
+    self->maxTorque = maxTorque;
 
     return self->state;
 }

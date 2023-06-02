@@ -83,6 +83,7 @@ extern "C" {
         double pitch;
         double minTorqueExt;
         double maxTorque;
+        int first;
         /* @endcond */
     } ikTpman;
     
